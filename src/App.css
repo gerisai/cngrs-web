@@ -1,0 +1,10 @@
+.main-flex {
+  width: 100%;
+  height: 98vh;
+}
+
+.box {
+  background-color: #a02669;
+  border-radius: 5px;
+  padding: 1rem;
+}
