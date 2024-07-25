@@ -1,37 +1,64 @@
 import React from 'react';
-import { Avatar, List, Typography } from 'antd';
+import { Table, Typography } from 'antd';
 
 const { Text } = Typography;
 
+const columns = [
+  {
+    title: 'Nombre',
+    dataIndex: 'name',
+    key: 'name',
+    render: (text) => <a>{text}</a>,
+  },
+  {
+    title: 'Zona',
+    dataIndex: 'zone',
+    key: 'zone',
+  },
+  {
+    title: 'Localidad',
+    dataIndex: 'branch',
+    key: 'branch',
+  },
+  {
+    title: 'Registrado',
+    dataIndex: 'registered',
+    key: 'registered',
+    render:  (text) => <Text>{text ? 'Si' : 'No'}</Text>,
+  }
+]
+
 const data = [
   {
-    title: 'Juan Pérez',
+    name: 'Juan Pérez',
+    zone: 'CDMX',
+    branch: 'Churubusco',
+    registered: true
   },
   {
-    title: 'Carlos Hernández',
+    name: 'Carlos Hernández',
+    zone: 'CDMX',
+    branch: 'Yugelito',
+    registered: true
   },
   {
-    title: 'Pedro López',
+    name: 'Pedro López',
+    zone: 'Edo Mex',
+    branch: 'Tejocote',
+    registered: true
   },
   {
-    title: 'Miguel Sánchez',
+    name: 'Miguel Sánchez',
+    zone: 'Morelos',
+    branch: 'Puente Blanco',
+    registered: true
   },
 ];
 
 function People() {
+  
   return (
-    <List
-    itemLayout="horizontal"
-    dataSource={data}
-    renderItem={(item, index) => (
-      <List.Item>
-        <List.Item.Meta
-          avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} />}
-          title={<Text >{item.title}</Text>}
-        />
-      </List.Item>
-    )}
-  />
+      <Table columns={columns} dataSource={data} />
   )
 }
 

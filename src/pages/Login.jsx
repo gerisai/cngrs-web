@@ -1,59 +1,65 @@
-import React from 'react';
-import { Flex, Typography, Form, Input, Button } from 'antd';
-
+import { useState } from 'react';
+import { Flex, Typography, Input, Button, Form, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import validationRules from '../util/validation';
+// import { Formik, Form, Field } from 'formik';
 const { Title } = Typography;
 
-const onFinish = (values) => {
-  console.log('Success:', values);
-};
-const onFinishFailed = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
+import useAuth from '../hooks/useAuth';
 
 function Login() {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { loginUser } = useAuth();
+
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const handleLogin = async (values) => {
+    setLoading(true);
+    try {
+      await loginUser({...values});
+      setLoading(false);
+      navigate('/people');
+    } catch(err) {
+      setLoading(false);
+      messageApi.open({ type: 'error', content: err.message });
+    }
+  }
+
+  const handleValidation = () => {
+    messageApi.open({ type: 'error', content: 'Error en los campos' });
+  }
+
   return (
+    <>
+    {contextHolder}
     <Flex  className='main-flex' align='center' justify='center'>
         <Flex className='box' vertical align='center' justify='center'>
           <Title>Iniciar Sesión</Title>
-          <Form
-            name="basic"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            size="large"
-            autoComplete="off"
-          >
+          <Form name="login" onFinish={handleLogin} onFinishFailed={handleValidation} size="large">
             <Form.Item
               name="username"
-              rules={[
-                {
-                  required: true,
-                  message: 'Teclea tu usuario',
-                },
-              ]}
+              rules={validationRules.username}
             >
               <Input placeholder='Usuario'/>
             </Form.Item>
 
             <Form.Item
               name="password"
-              rules={[
-                {
-                  required: true,
-                  message: 'Teclea tu contraseña',
-                },
-              ]}
+              rules={validationRules.password}
             >
               <Input.Password placeholder='Contraseña' />
             </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16,}}>
-              <Button  type="primary" htmlType="submit">
+            <Form.Item>
+              <Button type="primary" htmlType="submit" loading={loading}>
                 Enviar
               </Button>
             </Form.Item>
           </Form>
         </Flex>
     </Flex>
+    </>
   )
 }
 

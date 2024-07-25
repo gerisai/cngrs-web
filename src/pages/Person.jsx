@@ -13,7 +13,7 @@ function Person() {
             <Text>Localidad: Churubusco</Text>
             <Text>Registrado: Si</Text>
             <Text>Cuarto: AM2</Text>
-            <QRCode value={'example'} icon='/CNGRS.svg'/>
+            <QRCode value={'Heber Aguero'} errorLevel='H' icon='/CNGRS.svg'/>
           </Space>
         </Flex>
     </Flex>
