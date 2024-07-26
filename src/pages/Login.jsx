@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Flex, Typography, Input, Button, Form, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import validationRules from '../util/validation';
-// import { Formik, Form, Field } from 'formik';
 const { Title } = Typography;
 
 import useAuth from '../hooks/useAuth';
@@ -33,7 +32,7 @@ function Login() {
   return (
     <>
     {contextHolder}
-    <Flex  className='main-flex' align='center' justify='center'>
+    <Flex className='main-flex' align='center' justify='center'>
         <Flex className='box' vertical align='center' justify='center'>
           <Title>Iniciar Sesión</Title>
           <Form name="login" onFinish={handleLogin} onFinishFailed={handleValidation} size="large">

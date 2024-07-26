@@ -7,6 +7,7 @@ import useGetUser from './hooks/useGetUser';
 import Login from './pages/Login';
 import Person from './pages/Person';
 import People from './pages/People';
+import Home from './pages/Home.jsx';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
     <UserContext.Provider value={{ user, setUser, isLoading }}>
       <Routes>
         <Route path='/login' element={ <Login/> } />
+        <Route path='/home' element={ <Home/> } />
         <Route path='/person' element={ <Person/> } />
         <Route path='/people' element={ <People/> } />
       </Routes>

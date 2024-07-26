@@ -1,10 +1,33 @@
 .main-flex {
   width: 100%;
-  height: 98vh;
+  height: 100vh;
+  background-color: #141414;
 }
 
 .box {
   background-color: #a02669;
   border-radius: 5px;
   padding: 1rem;
+}
+
+.header {
+  background-color: #a02669;
+  display: flex;
+  align-items: center;
+}
+
+.content {
+  padding: 24px;
+  min-height: 360px;
+  border-radius: 8px;
+  background-color: #282828;
+}
+
+.menu {
+  border-radius: 8px;
+  background-color: #a02669;
+}
+
+.footer {
+  text-align: center;
 }
