@@ -1,5 +1,5 @@
-import React from 'react';
 import { Table, Typography } from 'antd';
+import HomeLayout from './HomeLayout';
 
 const { Text } = Typography;
 
@@ -58,7 +58,9 @@ const data = [
 function People() {
   
   return (
-      <Table columns={columns} dataSource={data} />
+      <HomeLayout>
+        <Table columns={columns} dataSource={data} />
+      </HomeLayout>    
   )
 }
 

@@ -1,22 +1,44 @@
 import React from 'react';
-import { Flex, Typography, QRCode, Space } from 'antd';
+import { Flex, Typography, QRCode, Descriptions } from 'antd';
+import HomeLayout from './HomeLayout.jsx';
 
 const { Title, Text } = Typography;
 
+const person = [
+  {
+    key: '1',
+    label: 'Zona',
+    children: 'CDMX'
+  },
+  {
+    key: '2',
+    label: 'Localidad',
+    children: 'Churubusco'
+  },
+  {
+    key: '3',
+    label: 'Registrado',
+    children: 'Si'
+  },
+  {
+    key: '4',
+    label: 'Cuarto',
+    children: 'AM2'
+  },
+  {
+    key: '5',
+    label: 'QR',
+    children: (<QRCode value={'Heber Aguero'} errorLevel='H' icon='/CNGRS.svg'/>)
+  }
+]
+
 function Person() {
   return (
-    <Flex  className='main-flex' align='center' justify='center'>
-        <Flex className='box' vertical align='center' justify='center'>
-          <Space direction='vertical' align='center'>
-            <Title>Juan Pérez</Title>
-            <Text>Zona: CDMX</Text>
-            <Text>Localidad: Churubusco</Text>
-            <Text>Registrado: Si</Text>
-            <Text>Cuarto: AM2</Text>
-            <QRCode value={'Heber Aguero'} errorLevel='H' icon='/CNGRS.svg'/>
-          </Space>
-        </Flex>
-    </Flex>
+    <HomeLayout>
+      <Flex vertical align='start'>
+        <Descriptions title="Juan Pérez" bordered items={person} />
+      </Flex>
+    </HomeLayout>
   )
 }
 

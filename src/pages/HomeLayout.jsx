@@ -3,7 +3,7 @@ import { Layout, FloatButton, Image, Typography } from 'antd';
 const { Content, Header, Footer } = Layout;
 const { Title } = Typography;
 
-const Home = () => {
+const HomeLayout = ({ children }) => {
   
   return (
     <Layout className='main-flex'>
@@ -14,7 +14,7 @@ const Home = () => {
       </Header>
         <Content style={{ margin: '24px 24px'}}>
           <div className='content'>
-            Bill is a cat.
+            { children }
           </div>
         </Content>
         <Footer className='footer'>
@@ -29,4 +29,4 @@ const Home = () => {
     </Layout>
   );
 };
-export default Home;
+export default HomeLayout;
