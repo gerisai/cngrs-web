@@ -7,6 +7,7 @@ import useGetUser from './hooks/useGetUser';
 import Login from './pages/Login';
 import Person from './pages/Person';
 import People from './pages/People';
+import User from './pages/User';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path='/login' element={ <Login/> } />
         <Route path='/person' element={ <Person/> } />
         <Route path='/people' element={ <People/> } />
+        <Route path='/user' element={ <User/> } />
       </Routes>
     </UserContext.Provider>
     </ConfigProvider>

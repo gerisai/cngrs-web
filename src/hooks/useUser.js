@@ -1,18 +1,18 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import api from '../util/api';
 import { UserContext } from './UserContext';
 
-export default function useAuth() {
+export default function useUser() {
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
-  const [error, setError] = useState(null);
 
   const createUser = async function (data) {
       try {
         await api.post('/user', data);
       } catch(err) {
-        setError(err.response.data);
+        const error = err.response ? err.response.data.message : err.message;
+        if (error.includes())
       }
   };
 
@@ -36,9 +36,6 @@ export default function useAuth() {
   return {
   createUser,
   readUser,
-  updateUser,
-  deleteUser,
-  error,
-  setError
+  updateUser
   }
 }

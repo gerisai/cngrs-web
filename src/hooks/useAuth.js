@@ -3,7 +3,7 @@ import api from '../util/api';
 import { UserContext } from './UserContext';
 
 export default function useAuth() {
-  const { _, setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   const loginUser = async function (data) {
     const { username, password } = data;

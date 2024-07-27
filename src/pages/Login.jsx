@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Flex, Typography, Input, Button, Form, message } from 'antd';
+import { Flex, Typography, Input, Button, Form, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import validationRules from '../util/validation';
 const { Title } = Typography;
@@ -11,7 +11,7 @@ function Login() {
   const navigate = useNavigate();
   const { loginUser } = useAuth();
 
-  const [messageApi, contextHolder] = message.useMessage();
+  const [api, contextHolder] = notification.useNotification();
 
   const handleLogin = async (values) => {
     setLoading(true);
@@ -21,12 +21,12 @@ function Login() {
       navigate('/people');
     } catch(err) {
       setLoading(false);
-      messageApi.open({ type: 'error', content: err.message });
+      api.error({ message: 'Error', description: err.message, placement: 'top' });
     }
   }
 
   const handleValidation = () => {
-    messageApi.open({ type: 'error', content: 'Error en los campos' });
+    api.error({ message: 'Error', description: 'Llena todos en los campos', placement: 'top' });
   }
 
   return (

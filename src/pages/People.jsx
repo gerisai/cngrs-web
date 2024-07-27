@@ -60,7 +60,7 @@ function People() {
   return (
       <HomeLayout>
         <Table columns={columns} dataSource={data} />
-      </HomeLayout>    
+      </HomeLayout>
   )
 }
 
