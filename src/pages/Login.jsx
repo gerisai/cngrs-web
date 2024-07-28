@@ -21,12 +21,12 @@ function Login() {
       navigate('/people');
     } catch(err) {
       setLoading(false);
-      api.error({ message: 'Error', description: err.message, placement: 'top' });
+      api.error({ message: 'Error', description: err.message, placement: 'top', showProgress: true });
     }
   }
 
   const handleValidation = () => {
-    api.error({ message: 'Error', description: 'Llena todos en los campos', placement: 'top' });
+    api.error({ message: 'Error', description: 'Llena todos en los campos', placement: 'top', showProgress: true });
   }
 
   return (

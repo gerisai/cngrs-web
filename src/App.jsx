@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Person from './pages/Person';
 import People from './pages/People';
 import User from './pages/User';
+import NotFound from './pages/NotFound';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path='/person' element={ <Person/> } />
         <Route path='/people' element={ <People/> } />
         <Route path='/user' element={ <User/> } />
+        <Route path='*' element={ <NotFound/> } />
       </Routes>
     </UserContext.Provider>
     </ConfigProvider>
