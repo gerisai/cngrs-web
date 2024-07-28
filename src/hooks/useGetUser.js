@@ -5,7 +5,7 @@ export default function useGetUser() {
     const [ isLoading, setLoading ] = useState(true);
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
+        const user = JSON.parse(localStorage.getItem('user')); // TODO: Shoulnd't use local storage, saving some money
         setUser(user);
         setLoading(false);
     }, []);
