@@ -1,11 +1,28 @@
+import { useContext } from 'react';
 import { AppstoreOutlined, UserOutlined, TableOutlined } from '@ant-design/icons';
 import { Layout, FloatButton, Image, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../hooks/UserContext';
+import Unathorized from './Unathorized';
+import Loading from './Loading';
+
 const { Content, Header, Footer } = Layout;
 const { Title } = Typography;
 
 const HomeLayout = ({ children }) => {
+  const { user, isLoading } = useContext(UserContext);
   const navigate = useNavigate();
+
+  if(isLoading) {
+    return <Loading/>
+  }
+
+  if (!user) {
+    return (
+      <Unathorized/>
+    )
+  }
+
 
   return (
     <Layout className='main-flex'>
