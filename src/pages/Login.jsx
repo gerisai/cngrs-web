@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Flex, Typography, Input, Button, Form, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import validationRules from '../util/validation';
-const { Title } = Typography;
-
 import useAuth from '../hooks/useAuth';
+
+const { Title } = Typography;
 
 function Login() {
   const [loading, setLoading] = useState(false);
