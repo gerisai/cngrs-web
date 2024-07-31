@@ -26,7 +26,7 @@ function Login() {
   }
 
   const handleValidation = () => {
-    api.error({ message: 'Error', description: 'Llena todos en los campos', placement: 'top', showProgress: true });
+    api.error({ message: 'Error', description: 'Revisa los campos', placement: 'top', showProgress: true });
   }
 
   return (
