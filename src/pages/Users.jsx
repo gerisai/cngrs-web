@@ -1,13 +1,14 @@
 import { useState, useContext } from 'react';
-import { Avatar, List, Button, notification, Typography } from 'antd';
+import { Avatar, List, Button, Typography } from 'antd';
 import { useQuery } from '@tanstack/react-query';
+// Project imports
 import { UserContext } from '../hooks/UserContext';
 import HomeLayout from './HomeLayout';
 import useUser from '../hooks/useUser';
 import Loading from './Loading';
 import Error from './Error';
 import Unathorized from './Unathorized';
-import NewUser from '../components/NewUser';
+import User from '../components/User';
 import evaluateRole from '../util/roleValidation';
 
 const { Title } = Typography;
@@ -15,9 +16,11 @@ const { Title } = Typography;
 function Users() {
   const { user } = useContext(UserContext);
   const { readUsers } = useUser();
+
   const [open, setOpen] = useState(false);
-  const [api, contextHolder] = notification.useNotification();
-  
+  const [actionType, setActionType] = useState(null);
+  const [username, setUsername] = useState(null);
+
   const { data: users , isLoading, error } = useQuery({
     queryFn: () => readUsers(),
     queryKey: ['users'],
@@ -35,7 +38,6 @@ function Users() {
 
   return (
       <HomeLayout>
-        {contextHolder}
         <List
           locale={{
             emptyText: <Title>Sin usuarios</Title>
@@ -51,18 +53,27 @@ function Users() {
             <List.Item>
               <List.Item.Meta
                 avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} />}
-                title={<a href={`${import.meta.env.VITE_WEB_URL}/users/${item.username}`}>{item.name}</a>}
+                title={<a onClick={() => {
+                    setActionType('Editar')
+                    setUsername(item.username)
+                    setOpen(true)
+                    }}>{item.name}</a>}
                 description={item.role}
               />
             </List.Item>
           )}
         />
         { evaluateRole(user.role, { resource: 'user', verb: 'CREATE' }, { it: user.name }) ?
-          <Button type="primary" size="large" onClick={() => setOpen(true)}>
+          <Button type="primary" size="large" onClick={() => {
+          setActionType('Crear')
+          setOpen(true)
+          }}>
             Crear
           </Button>
         : null }
-          <NewUser open={open} setOpen={setOpen} notificationApi={api}/>
+          { open ?
+          <User open={open} setOpen={setOpen} type={actionType} username={username} />
+          : null }
       </HomeLayout>
   )
 }

@@ -1,15 +1,17 @@
+import { useState } from 'react';
 import { Typography, Flex, Form, Select, Input, Space, Button, Popconfirm } from 'antd';
 import { EditOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+// Project imports
 import HomeLayout from './HomeLayout';
 import useUser from '../hooks/useUser';
 import Loading from './Loading';
 import Error from './Error';
 import Unathorized from './Unathorized';
 import validationRules from '../util/validation';
-import { useState } from 'react';
+import evaluateRole from '../util/roleValidation';
 
 const { Title } = Typography;
 
@@ -31,6 +33,7 @@ function User() {
     mutationFn: updateUser,
     onSuccess: () => {
       queryClient.invalidateQueries(['users']);
+      navigate('/users');
     }
   });
 
@@ -55,7 +58,9 @@ function User() {
         <Flex vertical align='start'>
         <Flex align='center'>
         <Title>{user.name}</Title>
-        <Button size="large" icon={<EditOutlined />} style={{marginTop: 3}} onClick={() => setEditable(!editable)} htmlType="submit" type="outlined"/>
+        { evaluateRole(user.role, { resource: 'user', verb: 'READ' }, { it: user.name, role: user.role }) ?
+            <Button size="large" icon={<EditOutlined />} style={{marginTop: 3}} onClick={() => setEditable(!editable)} htmlType="submit" type="outlined"/>
+        : null }
         </Flex>
         <Form layout="vertical" onFinish={handleUpdate} onFinishFailed={true} size="large" disabled={!editable}>
           <Form.Item

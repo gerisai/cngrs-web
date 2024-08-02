@@ -22,7 +22,17 @@ const validationRules = {
     },
     {
       pattern: /^[a-zA-Z\ ]+$/,
-      message: 'El nombre solo puede contener letras'
+      message: 'El nombre solo puede contener letras y espacios'
+    }
+  ],
+  email: [
+    {
+      required: true,
+      message: 'Ingresa un email',
+    },
+    {
+      pattern: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+      message: 'Correo electrónico inválido'
     }
   ],
   role: [

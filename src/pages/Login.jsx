@@ -1,29 +1,30 @@
-import { useState } from 'react';
-import { Flex, Typography, Input, Button, Form, notification } from 'antd';
+import { useContext } from 'react';
+import { Flex, Typography, Input, Button, Form } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+// Project imports
 import validationRules from '../util/validation';
+import { NotificationContext } from '../hooks/NotificationContext';
 import useAuth from '../hooks/useAuth';
 
 const { Title } = Typography;
 
 function Login() {
-  const [loading, setLoading] = useState(false);
+  const api = useContext(NotificationContext);
+  
   const navigate = useNavigate();
   const { loginUser } = useAuth();
 
-  const [api, contextHolder] = notification.useNotification();
-
-  const handleLogin = async (values) => {
-    setLoading(true);
-    try {
-      await loginUser({...values});
-      setLoading(false);
-      navigate('/people');
-    } catch(err) {
-      setLoading(false);
-      api.error({ message: 'Error', description: err.message, placement: 'top', showProgress: true });
+  const { mutateAsync: handleLogin, isPending } = useMutation({
+    mutationFn: async (values) => {
+      try {
+        await loginUser(values);
+        navigate('/people');
+      } catch(err) {
+        api.error({ message: 'Error', description: err.message, placement: 'top', showProgress: true });
+      }
     }
-  }
+  });
 
   const handleValidation = () => {
     api.error({ message: 'Error', description: 'Revisa los campos', placement: 'top', showProgress: true });
@@ -31,7 +32,6 @@ function Login() {
 
   return (
     <>
-    {contextHolder}
     <Flex className='main-flex' align='center' justify='center'>
         <Flex className='box' vertical align='center' justify='center'>
           <Title>Iniciar Sesión</Title>
@@ -51,7 +51,7 @@ function Login() {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" loading={loading}>
+              <Button type="primary" htmlType="submit" loading={isPending}>
                 Enviar
               </Button>
             </Form.Item>
