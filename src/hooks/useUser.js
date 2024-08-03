@@ -5,8 +5,6 @@ export default function useUser() {
 
   const createUser = async function (data) {
       try {
-        const password = createRandomPassword(8);
-        data = { ...data, password } // Add a random password
         await api.post('/users', data);
       } catch(err) {
         const error = err.response ? err.response.data.message : err.message;
