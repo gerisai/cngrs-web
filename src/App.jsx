@@ -3,6 +3,7 @@ import { ConfigProvider } from 'antd';
 import { Route , Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { notification } from 'antd';
+// Project imports
 import customTheme from './theme.jsx';
 import { UserContext } from './hooks/UserContext';
 import { NotificationContext } from './hooks/NotificationContext';
@@ -10,7 +11,6 @@ import useGetUser from './hooks/useGetUser';
 import Login from './pages/Login';
 import Person from './pages/Person';
 import People from './pages/People';
-import User from './pages/User';
 import Users from './pages/Users';
 import NotFound from './pages/NotFound';
 
@@ -27,10 +27,10 @@ function App() {
     <NotificationContext.Provider value={ api }>
       { contextHolder }
       <Routes>
+        <Route path='/' element={ <People/> } />
         <Route path='/login' element={ <Login/> } />
         <Route path='/person' element={ <Person/> } />
         <Route path='/people' element={ <People/> } />
-        <Route path='/users/:username' element={ <User/> } />
         <Route path='/users' element={ <Users/> } />
         <Route path='/person' element={ <Person/> } />
         <Route path='*' element={ <NotFound/> } />

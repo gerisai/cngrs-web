@@ -9,7 +9,7 @@ import Loading from './Loading';
 import Error from './Error';
 import Unathorized from './Unathorized';
 import User from '../components/User';
-import evaluateRole from '../util/roleValidation';
+import canRoleDo from '../util/roleValidation';
 
 const { Title } = Typography;
 
@@ -63,7 +63,7 @@ function Users() {
             </List.Item>
           )}
         />
-        { evaluateRole(user.role, { resource: 'user', verb: 'CREATE' }, { it: user.name }) ?
+        { canRoleDo(user.role, 'CREATE', 'user') ?
           <Button type="primary" size="large" onClick={() => {
           setActionType('Crear')
           setOpen(true)

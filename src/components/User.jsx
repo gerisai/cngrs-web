@@ -4,12 +4,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { CloseCircleOutlined } from '@ant-design/icons';
 // Project imports
 import validationRules from '../util/validation';
+import { UserContext } from '../hooks/UserContext';
 import { NotificationContext } from '../hooks/NotificationContext';
 import useUser from '../hooks/useUser';
 import createRandomPassword from '../util/passwords';
+import canRoleDo from '../util/roleValidation';
 
 function User({ open, setOpen, type, username }) {
-
+  const { user: currentUser } = useContext(UserContext);
   const { createUser, readUser, updateUser, deleteUser } = useUser();
   const api = useContext(NotificationContext);
 
@@ -30,7 +32,7 @@ function User({ open, setOpen, type, username }) {
     }
   });
 
-  const { data: user, isPending, isFetching } = useQuery({
+  const { data: user, isPending, isFetching, isError, error } = useQuery({
     queryFn: () => {
       try {
         if (type === 'Crear') return { username: '', name: '', role: '' }
@@ -79,6 +81,11 @@ function User({ open, setOpen, type, username }) {
   const onClose = () => {
     setOpen(false);
   };
+
+  if (isError) {
+    setOpen(false);
+    api.error({ message: 'Error', description: error.message, placement: 'top', showProgress: true });
+  }
   
   return (
     <>
@@ -93,7 +100,13 @@ function User({ open, setOpen, type, username }) {
           <Skeleton active />
         </Flex>
       :
-      <Form layout="vertical" onFinish={ type === 'Crear' ? addUser : handleUpdate } onFinishFailed={handleValidation} size="large">
+      <Form
+        layout="vertical"
+        onFinish={ type === 'Crear' ? addUser : handleUpdate }
+        onFinishFailed={handleValidation}
+        size="large"
+        disabled={ user ? !canRoleDo(currentUser.role, 'UPDATE', 'user') : false }
+      >
           <Row>
             <Col span={24}>
               <Form.Item
@@ -101,8 +114,9 @@ function User({ open, setOpen, type, username }) {
                 label="Usuario"
                 rules={validationRules.username}
                 initialValue={user ? user.username : ''}
+                tooltip={type === 'Editar' ? 'No se puede actualizar el nombre de usuario' : null}
               >
-                <Input placeholder="Nombre de usuario" />
+                <Input placeholder="Nombre de usuario" disabled={type === 'Editar' ? true : false}/>
               </Form.Item>
             </Col>
           </Row>
