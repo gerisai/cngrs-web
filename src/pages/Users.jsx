@@ -64,7 +64,7 @@ function Users() {
           )}
         />
         { canRoleDo(user.role, 'CREATE', 'user') ?
-          <Button type="primary" size="large" onClick={() => {
+          <Button style={{ marginTop: 20 }} type="primary" size="large" onClick={() => {
           setActionType('Crear')
           setOpen(true)
           }}>
