@@ -32,12 +32,11 @@ const roleMappings = {
 }
 
 function canRoleDo(role, verb, resource) {
-
   const policies = roleMappings[role];
   for (const policy of policies) {
     if (policy.resource == resource && policy.verbs.includes(verb)) return true;
-    return false
   }
+  return false
 }
 
 export default canRoleDo;

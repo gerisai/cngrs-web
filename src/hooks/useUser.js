@@ -1,5 +1,4 @@
 import api from '../util/api';
-import createRandomPassword from '../util/passwords';
 
 export default function useUser() {
 
