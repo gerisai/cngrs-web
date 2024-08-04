@@ -1,5 +1,5 @@
-import { Table, Typography, Button } from 'antd';
-import { useState, useContext } from 'react';
+import { Table, Typography, Button, AutoComplete, Flex } from 'antd';
+import { useState, useContext, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // Project imports
 import { UserContext } from '../hooks/UserContext';
@@ -13,16 +13,26 @@ import canRoleDo from '../util/roleValidation';
 
 const { Text } = Typography;
 
+function onlyUnique(value, index, array) {
+  return array.indexOf(value) === index;
+}
 
 function People() {
   const { user } = useContext(UserContext);
   const { readPeople } = usePeople();
-  
+
+  // Drawer render state
   const [open, setOpen] = useState(false);
   const [actionType, setActionType] = useState(null);
   const [personId, setPersonId] = useState(null);
 
-  const { data: people , isLoading, error } = useQuery({
+  // Search state
+  const [options, setOptions] = useState([]);
+
+  // Filter state
+  const [people, setPeople] = useState(null);
+
+  const { data: queryPeople , isLoading, error } = useQuery({
     queryFn: () => readPeople(),
     queryKey: ['people'],
     retry: false
@@ -36,6 +46,18 @@ function People() {
     if (error.message.includes('Unauthorized') || error.message.includes('Forbbiden')) return <Unathorized/>;
     return <Error message={error.message}/>;
   }
+
+  let data = queryPeople ? queryPeople.map((person,i) => ({
+      key: i,
+      name: {personId: person.personId, name: person.name}, // must be passed to state eventually in columns
+      zone: person.zone,
+      branch: person.branch,
+      registered: person.registered
+  })) : null;
+  const personNames = data ? data.map((person) => person.name.name) : null;
+  const zones = data ? data.map((person) => person.zone).filter(onlyUnique) : null;
+  const branches = data ? data.map((person) => person.branch).filter(onlyUnique) : null;
+
 
   const columns = [
     {
@@ -52,33 +74,56 @@ function People() {
       title: 'Zona',
       dataIndex: 'zone',
       key: 'zone',
+      filters: zones.map((zone) => ({ text: zone, value: zone })),
+      onFilter: (filter, record) => record.zone.includes(filter)
     },
     {
       title: 'Localidad',
       dataIndex: 'branch',
       key: 'branch',
+      filters: branches.map((branch) => ({ text: branch, value: branch })),
+      onFilter: (filter, record) => record.branch.includes(filter)
     },
     {
       title: 'Registrado',
       dataIndex: 'registered',
       key: 'registered',
       render:  (text) => <Text>{text ? 'Si' : 'No'}</Text>,
+      filters: [true, false].map((registered)=> ({ text: registered ? 'Si' : 'No', value: registered})),
+      onFilter: (filter, record) => record.registered === filter
     }
   ]
 
+  const onSelect = (match) => {
+    setPeople(data.filter((person) => person.name.name === match));
+  };
+
+  const handleSearch = (value) => {
+    setPeople(null)
+    const matches = personNames.filter((name) => name.includes(value.toUpperCase()));
+    setPeople(data.filter((person) => person.name.name.includes(value.toUpperCase()))); // filter in real time
+    setOptions(!value ? [] : matches.map(m => ({ value: m })));
+  };
+
   return (
       <HomeLayout>
-        <Table columns={columns} dataSource={ people.map((person,i) => {
-          return {
-            key: i,
-            name: {personId: person.personId, name: person.name},
-            zone: person.zone,
-            branch: person.branch,
-            registered: person.registered
-          }
-        })} />
+      <Flex justify='end'>
+      <AutoComplete
+        popupMatchSelectWidth={252}
+        style={{
+          width: 300,
+          marginBottom: 20
+        }}
+        options={options}
+        onSelect={onSelect}
+        onSearch={handleSearch}
+        size="large"
+        placeholder='Buscar...'
+      />
+      </Flex>
+        <Table pagination={false} columns={columns} dataSource={ people || data } />
         { canRoleDo(user.role, 'CREATE', 'person') ?
-          <Button type="primary" size="large" onClick={() => {
+          <Button style={{ marginTop: 20 }}type="primary" size="large" onClick={() => {
           setActionType('Crear')
           setOpen(true)
           }}>

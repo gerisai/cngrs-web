@@ -52,7 +52,7 @@ function Users() {
           renderItem={(item, index) => (
             <List.Item>
               <List.Item.Meta
-                avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} />}
+                // avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} />} TODO: Add avatar feature
                 title={<a onClick={() => {
                     setActionType('Editar')
                     setUsername(item.username)
