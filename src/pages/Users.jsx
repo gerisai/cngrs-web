@@ -38,7 +38,16 @@ function Users() {
 
   return (
       <HomeLayout>
+        { canRoleDo(user.role, 'CREATE', 'user') ?
+          <Button type="primary" size="large" onClick={() => {
+          setActionType('Crear')
+          setOpen(true)
+          }}>
+            Crear
+          </Button>
+        : null }
         <List
+          style={{ marginTop: 20 }}
           locale={{
             emptyText: <Title>Sin usuarios</Title>
           }}
@@ -63,14 +72,6 @@ function Users() {
             </List.Item>
           )}
         />
-        { canRoleDo(user.role, 'CREATE', 'user') ?
-          <Button style={{ marginTop: 20 }} type="primary" size="large" onClick={() => {
-          setActionType('Crear')
-          setOpen(true)
-          }}>
-            Crear
-          </Button>
-        : null }
           { open ?
           <User open={open} setOpen={setOpen} type={actionType} username={username} />
           : null }

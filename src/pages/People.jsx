@@ -1,5 +1,5 @@
-import { Table, Typography, Button, AutoComplete, Flex } from 'antd';
-import { useState, useContext, useEffect } from 'react';
+import { Table, Typography, Button, AutoComplete, Row, Col } from 'antd';
+import { useState, useContext } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // Project imports
 import { UserContext } from '../hooks/UserContext';
@@ -107,12 +107,22 @@ function People() {
 
   return (
       <HomeLayout>
-      <Flex justify='end'>
+      <Row style={{ marginBottom: 20 }} justify="space-between">
+      <Col>
+      { canRoleDo(user.role, 'CREATE', 'person') ?
+          <Button type="primary" size="large" onClick={() => {
+          setActionType('Crear')
+          setOpen(true)
+          }}>
+            Crear
+          </Button>
+        : null }
+      </Col>
+      <Col>
       <AutoComplete
         popupMatchSelectWidth={252}
         style={{
-          width: 300,
-          marginBottom: 20
+          width: 300
         }}
         options={options}
         onSelect={onSelect}
@@ -120,16 +130,9 @@ function People() {
         size="large"
         placeholder='Buscar...'
       />
-      </Flex>
+      </Col>
+      </Row>
         <Table pagination={false} columns={columns} dataSource={ people || data } />
-        { canRoleDo(user.role, 'CREATE', 'person') ?
-          <Button style={{ marginTop: 20 }} type="primary" size="large" onClick={() => {
-          setActionType('Crear')
-          setOpen(true)
-          }}>
-            Crear
-          </Button>
-        : null }
           { open ?
           <Person open={open} setOpen={setOpen} type={actionType} personId={personId} />
           : null }
