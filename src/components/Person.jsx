@@ -40,7 +40,7 @@ function Person({ open, setOpen, type, personId }) {
         api.error({ message: 'Error', placement: 'top', description: err.message });
       }
     },
-    queryKey: ['user']
+    queryKey: ['person']
   });
 
   const { mutateAsync: handleUpdate } = useMutation({
@@ -55,7 +55,7 @@ function Person({ open, setOpen, type, personId }) {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['users']);
+      queryClient.invalidateQueries(['people']);
     }
   });
 
@@ -70,7 +70,7 @@ function Person({ open, setOpen, type, personId }) {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['users']);
+      queryClient.invalidateQueries(['people']);
     }
   });
 

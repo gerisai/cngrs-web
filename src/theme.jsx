@@ -2,7 +2,7 @@ import { theme } from 'antd';
 
 const customTheme = {
     token: {
-      colorPrimary: '#551c3b',
+      colorPrimary: '#fc46c7',
       colorBgBase: "#141414",
       colorInfo: '#00bed1',
       colorSuccess: '#7fff3f',
