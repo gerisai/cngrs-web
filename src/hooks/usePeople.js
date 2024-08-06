@@ -11,9 +11,9 @@ export default function usePeople() {
       }
   };
 
-  const readPerson = async function (username) {
+  const readPerson = async function (personId) {
     try {
-      const res = await api.get(`/people/${username}`);
+      const res = await api.get(`/people/${personId}`);
       const readPerson = res.data.person;
       return readPerson;
     } catch(err) {

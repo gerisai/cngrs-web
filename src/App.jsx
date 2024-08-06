@@ -29,10 +29,9 @@ function App() {
       <Routes>
         <Route path='/' element={ <People/> } />
         <Route path='/login' element={ <Login/> } />
-        <Route path='/person' element={ <Person/> } />
+        <Route path='/person/:personId' element={ <Person/> } />
         <Route path='/people' element={ <People/> } />
         <Route path='/users' element={ <Users/> } />
-        <Route path='/person' element={ <Person/> } />
         <Route path='*' element={ <NotFound/> } />
       </Routes>
     </NotificationContext.Provider>
