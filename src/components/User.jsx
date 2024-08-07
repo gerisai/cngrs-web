@@ -1,4 +1,4 @@
-import { Button, Col, Drawer, Form, Input, Row, Space, Select, Skeleton, Flex, Popconfirm } from 'antd';
+import { Button, Col, Drawer, Form, Input, Row, Space, Select, Skeleton, Flex, Popconfirm, Switch } from 'antd';
 import { useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { CloseCircleOutlined } from '@ant-design/icons';
@@ -168,6 +168,16 @@ function User({ open, setOpen, type, username }) {
                   <Select.Option value="admin">Administrador</Select.Option>
                   <Select.Option value="operator">Operador</Select.Option>
                 </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+            <Form.Item
+                name="sendMail"
+                label="¿Enviar email de bienvenida?"
+              >
+                <Switch />
               </Form.Item>
             </Col>
           </Row>

@@ -11,7 +11,7 @@ import Unathorized from './Unathorized';
 import Person from '../components/Person';
 import canRoleDo from '../util/roleValidation';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 function onlyUnique(value, index, array) {
   return array.indexOf(value) === index;
@@ -132,7 +132,14 @@ function People() {
       />
       </Col>
       </Row>
-        <Table pagination={false} columns={columns} dataSource={ people || data } />
+        <Table 
+          locale={{
+            emptyText: <Title>Sin registros</Title>
+          }}
+          pagination={false}
+          columns={columns}
+          dataSource={ people || data } 
+        />
           { open ?
           <Person open={open} setOpen={setOpen} type={actionType} personId={personId} />
           : null }
