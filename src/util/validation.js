@@ -35,6 +35,16 @@ const validationRules = {
       message: 'Correo electrónico inválido'
     }
   ],
+  cellphone: [
+    {
+      required: true,
+      message: 'Ingresa tu teléfono',
+    },
+    {
+      pattern: /^[0-9]+$/,
+      message: 'Solo puede contener números'
+    }
+  ],
   role: [
     {
       required: true,

@@ -1,4 +1,4 @@
-import { Button, Col, Drawer, Form, Input, Row, Space, Skeleton, Flex, Popconfirm, Switch } from 'antd';
+import { Button, Col, Drawer, Form, Input, Row, Space, Skeleton, Flex, Popconfirm, Switch, Select } from 'antd';
 import { useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { CloseCircleOutlined } from '@ant-design/icons';
@@ -122,6 +122,21 @@ function Person({ open, setOpen, type, personId }) {
           <Row>
             <Col span={24}>
             <Form.Item
+                name="gender"
+                label="Género"
+                rules={validationRules.gender}
+                initialValue={person ? person.gender : ''}
+              >
+                <Select placeholder="Selecciona género">
+                  <Select.Option value="male">Hombre</Select.Option>
+                  <Select.Option value="female">Mujer</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+            <Form.Item
                 name="email"
                 label="Correo electrónico"
                 rules={validationRules.email}
@@ -132,6 +147,43 @@ function Person({ open, setOpen, type, personId }) {
             </Col>
           </Row>
           <Row>
+            <Col span={24}>
+            <Form.Item
+                name="cellphone"
+                label="Teléfono"
+                rules={validationRules.cellphone}
+                initialValue={person ? person.cellphone : ''}
+              >
+                <Input placeholder="Teléfono" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+            <Form.Item
+                name="tutor"
+                label="Tutor"
+                rules={validationRules.tutor}
+                initialValue={person ? person.tutor : ''}
+              >
+                <Input placeholder="Tutor" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+          <Row>
+            <Col span={24}>
+            <Form.Item
+                name="illness"
+                label="Enfermedad/Medicamentos"
+                rules={validationRules.tutor}
+                initialValue={person ? person.tutor : ''}
+              >
+                <Input.TextArea rows={2} placeholder="" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row></Row>
             <Col span={24}>
             <Form.Item
                 name="registered"
