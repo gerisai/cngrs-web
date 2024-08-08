@@ -52,11 +52,21 @@ export default function useUser() {
     }
   };
 
+  const uploadAvatar = async function (username,data) {
+    try {
+      await api.post(`/users/${username}`, data);
+    } catch(err) {
+      const error = err.response ? err.response.data.message : err.message;
+      throw new Error(error);
+    }
+  };
+
   return {
   createUser,
   readUser,
   readUsers,
   updateUser,
-  deleteUser
+  deleteUser,
+  uploadAvatar
   }
 }

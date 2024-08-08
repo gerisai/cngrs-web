@@ -7,7 +7,7 @@ import { notification } from 'antd';
 import customTheme from './theme.jsx';
 import { UserContext } from './hooks/UserContext';
 import { NotificationContext } from './hooks/NotificationContext';
-import useGetUser from './hooks/useGetUser';
+import useGetAuthUser from './hooks/useGetAuthUser';
 import Login from './pages/Login';
 import Person from './pages/Person';
 import People from './pages/People';
@@ -17,13 +17,13 @@ import NotFound from './pages/NotFound';
 const queryClient = new QueryClient();
 
 function App() {
-  const { user, setUser, isLoading } = useGetUser();
+  const { user, authLoading, setUser, setAuthLoading } = useGetAuthUser();
   const [api, contextHolder] = notification.useNotification();
 
   return (
     <ConfigProvider theme={ customTheme }>
     <QueryClientProvider client={ queryClient }>
-    <UserContext.Provider value={{ user, setUser, isLoading }}>
+    <UserContext.Provider value={{ user, setUser, authLoading, setAuthLoading}}>
     <NotificationContext.Provider value={ api }>
       { contextHolder }
       <Routes>

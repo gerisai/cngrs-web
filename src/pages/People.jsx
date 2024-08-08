@@ -32,13 +32,13 @@ function People() {
   // Filter state
   const [people, setPeople] = useState(null);
 
-  const { data: queryPeople , isLoading, error } = useQuery({
+  const { data: queryPeople , isPending, error } = useQuery({
     queryFn: () => readPeople(),
     queryKey: ['people'],
     retry: false
   });
 
-  if (isLoading) {
+  if (isPending) {
     return <Loading/>;
   }
 

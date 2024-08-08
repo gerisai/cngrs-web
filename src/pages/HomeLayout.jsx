@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { AppstoreOutlined, UserOutlined, TableOutlined, TeamOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Layout, FloatButton, Image, Typography } from 'antd';
+import { Layout, FloatButton, Image, Typography, Avatar, Flex, Upload, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 // Project imports
 import { UserContext } from '../hooks/UserContext';
 import { NotificationContext } from '../hooks/NotificationContext';
@@ -10,16 +10,42 @@ import User from '../components/User';
 import Unathorized from './Unathorized';
 import Loading from './Loading';
 import useAuth from '../hooks/useAuth';
+import useUser from '../hooks/useUser';
 import canRoleDo from '../util/roleValidation';
 
 const { Content, Header, Footer } = Layout;
 const { Title } = Typography;
 
 const HomeLayout = ({ children }) => {
-  const { user, isLoading } = useContext(UserContext);
+  const { user, authLoading } = useContext(UserContext);
   const api = useContext(NotificationContext);
-  const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false); // current user edit
+  const [avatarLoading, setAvalarLoading] = useState(false); 
   const { logoutUser } = useAuth();
+  const { uploadAvatar } = useUser();
+
+  const avatarProps = {
+    name: 'avatar',
+    showUploadList: false,
+    accept: '.png,.jpeg',
+    async customRequest ({ file }) {
+      const data = new FormData();
+      data.append('avatar', file);
+      try {
+        setAvalarLoading(true);
+        await uploadAvatar(user.username, data);
+        queryClient.invalidateQueries(['user']);
+        api.success({message: 'Éxito', message: 'Foto actualizada', placement: 'top'});
+        setAvalarLoading(false);
+      } catch (err) {
+        api.error({ message: 'Error', description: `Error al actualizar la foto: ${err}`, placement: 'top'});
+        setAvalarLoading(false);
+      }
+    },
+    maxCount: 1
+  }
 
   const { mutateAsync: logout } = useMutation({
     mutationFn: async () => {
@@ -32,10 +58,7 @@ const HomeLayout = ({ children }) => {
     }
   });
 
-  const navigate = useNavigate();
-
-
-  if(isLoading) {
+  if(authLoading) {
     return <Loading/>
   }
 
@@ -51,7 +74,12 @@ const HomeLayout = ({ children }) => {
       <Layout>
       <Header className='header'>
           <Image alt='cnrgs-logo' preview={false} width={50} src='/CNGRS.svg' />
-          <Title>{user.name}</Title>
+          <Flex justify='center' align='center'>
+            <Upload {...avatarProps}>
+              { avatarLoading ? <Spin size="large" /> : <Avatar src={user.avatar} size="large" icon={<UserOutlined />} /> }
+            </Upload>
+            <Title style={{ marginLeft: 10 }}>{user.name.split(' ')[0]}</Title>
+          </Flex>
       </Header>
         <Content style={{ margin: '24px 24px'}}>
           <div className='content'>
@@ -77,4 +105,5 @@ const HomeLayout = ({ children }) => {
     </>
   );
 };
+
 export default HomeLayout;
