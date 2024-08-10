@@ -37,7 +37,7 @@ const HomeLayout = ({ children }) => {
         setAvalarLoading(true);
         await uploadAvatar(user.username, data);
         queryClient.invalidateQueries(['user']);
-        api.success({message: 'Éxito', message: 'Foto actualizada', placement: 'top'});
+        api.success({message: 'Éxito', description: 'Foto actualizada', placement: 'top'});
         setAvalarLoading(false);
       } catch (err) {
         api.error({ message: 'Error', description: `Error al actualizar la foto: ${err}`, placement: 'top'});
