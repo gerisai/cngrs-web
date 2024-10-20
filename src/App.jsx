@@ -2,12 +2,10 @@ import './App.css';
 import { ConfigProvider } from 'antd';
 import { Route , Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { notification } from 'antd';
 // Project imports
 import customTheme from './theme.jsx';
-import { UserContext } from './hooks/UserContext';
-import { NotificationContext } from './hooks/NotificationContext';
-import useGetAuthUser from './hooks/useGetAuthUser';
+import { UserProvider } from './lib/context/user';
+import { NotificationProvider } from './lib/context/notification';
 import Login from './pages/Login';
 import Person from './pages/Person';
 import People from './pages/People';
@@ -17,15 +15,12 @@ import NotFound from './pages/NotFound';
 const queryClient = new QueryClient();
 
 function App() {
-  const { user, authLoading, setUser, setAuthLoading } = useGetAuthUser();
-  const [api, contextHolder] = notification.useNotification();
 
   return (
     <ConfigProvider theme={ customTheme }>
     <QueryClientProvider client={ queryClient }>
-    <UserContext.Provider value={{ user, setUser, authLoading, setAuthLoading}}>
-    <NotificationContext.Provider value={ api }>
-      { contextHolder }
+    <UserProvider>
+    <NotificationProvider>
       <Routes>
         <Route path='/' element={ <People/> } />
         <Route path='/login' element={ <Login/> } />
@@ -34,8 +29,8 @@ function App() {
         <Route path='/users' element={ <Users/> } />
         <Route path='*' element={ <NotFound/> } />
       </Routes>
-    </NotificationContext.Provider>
-    </UserContext.Provider>
+    </NotificationProvider>
+    </UserProvider>
     </QueryClientProvider>
     </ConfigProvider>
   )

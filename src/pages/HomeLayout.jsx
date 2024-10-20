@@ -1,30 +1,27 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { AppstoreOutlined, UserOutlined, TableOutlined, TeamOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Layout, FloatButton, Image, Typography, Avatar, Flex, Upload, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 // Project imports
-import { UserContext } from '../hooks/UserContext';
-import { NotificationContext } from '../hooks/NotificationContext';
+import { useUser } from '../lib/context/user';
+import { useNotification } from '../lib/context/notification';
 import User from '../components/User';
 import Unathorized from './Unathorized';
-import Loading from './Loading';
-import useAuth from '../hooks/useAuth';
-import useUser from '../hooks/useUser';
+import useUsers from '../hooks/useUsers';
 import canRoleDo from '../util/roleValidation';
 
 const { Content, Header, Footer } = Layout;
 const { Title } = Typography;
 
 const HomeLayout = ({ children }) => {
-  const { user, authLoading } = useContext(UserContext);
-  const api = useContext(NotificationContext);
+  const { user, logout } = useUser();
+  const api = useNotification();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // current user edit
   const [avatarLoading, setAvalarLoading] = useState(false); 
-  const { logoutUser } = useAuth();
-  const { uploadAvatar } = useUser();
+  const { uploadAvatar } = useUsers();
 
   const avatarProps = {
     name: 'avatar',
@@ -38,29 +35,25 @@ const HomeLayout = ({ children }) => {
         await uploadAvatar(user.username, data);
         queryClient.invalidateQueries(['user']);
         api.success({message: 'Éxito', description: 'Foto actualizada', placement: 'top'});
-        setAvalarLoading(false);
       } catch (err) {
         api.error({ message: 'Error', description: `Error al actualizar la foto: ${err}`, placement: 'top'});
+      } finally {
         setAvalarLoading(false);
       }
     },
     maxCount: 1
   }
 
-  const { mutateAsync: logout } = useMutation({
+  const { mutateAsync: logoutUser } = useMutation({
     mutationFn: async () => {
       try {
-        await logoutUser();
+        await logout();
         navigate('/login');
       } catch(err) {
         api.error({ message: 'Error', description: err.message, placement: 'top', showProgress: true });
       }
     }
   });
-
-  if(authLoading) {
-    return <Loading/>
-  }
 
   if (!user) {
     return (
@@ -90,7 +83,7 @@ const HomeLayout = ({ children }) => {
         CNGRS Web ©{new Date().getFullYear()} Made with 💜
       </Footer>
         <FloatButton.Group shape="circle" style={{ right: 24 }} icon={<AppstoreOutlined />} trigger="click" type="primary">
-          <FloatButton icon={<LogoutOutlined />} tooltip={<div>Cerrar Sesión</div>} onClick={logout}/>
+          <FloatButton icon={<LogoutOutlined />} tooltip={<div>Cerrar Sesión</div>} onClick={logoutUser}/>
           { canRoleDo(user.role, 'LIST', 'user') ?
           <FloatButton icon={<TeamOutlined />} tooltip={<div>Usuarios</div>} onClick={() => navigate('/users')}/> 
           : null }

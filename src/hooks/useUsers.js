@@ -1,6 +1,6 @@
 import api from '../util/api';
 
-export default function useUser() {
+export default function useUsers() {
 
   const createUser = async function (data) {
       try {
