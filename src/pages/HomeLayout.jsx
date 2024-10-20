@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AppstoreOutlined, UserOutlined, TableOutlined, TeamOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Layout, FloatButton, Button, Image, Typography, Avatar, Flex, Upload, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 // Project imports
 import { useUser } from '../lib/context/user';
 import { useNotification } from '../lib/context/notification';
@@ -17,7 +17,6 @@ const { Title } = Typography;
 const HomeLayout = ({ children }) => {
   const { user, logout } = useUser();
   const api = useNotification();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // current user edit
   const [avatarLoading, setAvalarLoading] = useState(false); 
@@ -33,7 +32,6 @@ const HomeLayout = ({ children }) => {
       try {
         setAvalarLoading(true);
         await uploadAvatar(user.username, data);
-        queryClient.invalidateQueries(['user']);
         api.success({message: 'Éxito', description: 'Foto actualizada', placement: 'top'});
       } catch (err) {
         api.error({ message: 'Error', description: `Error al actualizar la foto: ${err}`, placement: 'top'});

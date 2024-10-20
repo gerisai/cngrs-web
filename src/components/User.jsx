@@ -48,6 +48,7 @@ function User({ open, setOpen, type, username }) {
       try {
         setOpen(false);
         await updateUser(values);
+        if (values.username === currentUser.username) window.location.reload(); // Update UI for current user
         api.success({ message: 'Éxito', description: 'Usuario actualizado', placement: 'top', showProgress: true });
       } catch(err) {
         api.error({ message: 'Error', placement: 'top', description: err.message });
