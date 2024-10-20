@@ -41,6 +41,7 @@ function Users() {
         { canRoleDo(user.role, 'CREATE', 'user') ?
           <Button type="primary" size="large" onClick={() => {
           setActionType('Crear')
+          console.log(users)
           setOpen(true)
           }}>
             Crear
@@ -55,13 +56,14 @@ function Users() {
             return {
               username: user.username,
               name: user.name,
-              role: user.role
+              role: user.role,
+              avatar: user.avatar
             }
           })}
           renderItem={(item, index) => (
             <List.Item>
               <List.Item.Meta
-                avatar={<Avatar src={item.avatar ? item.avatar : `https://api.dicebear.com/9.x/initials/svg?seed=${item.name}`} />}
+                avatar={<Avatar src={item.avatar || `https://api.dicebear.com/9.x/initials/svg?seed=${item.name}`} />}
                 title={<a onClick={() => {
                     setActionType('Editar')
                     setUsername(item.username)

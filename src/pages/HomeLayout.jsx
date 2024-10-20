@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AppstoreOutlined, UserOutlined, TableOutlined, TeamOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Layout, FloatButton, Image, Typography, Avatar, Flex, Upload, Spin } from 'antd';
+import { Layout, FloatButton, Button, Image, Typography, Avatar, Flex, Upload, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 // Project imports
@@ -69,9 +69,9 @@ const HomeLayout = ({ children }) => {
           <Image alt='cnrgs-logo' preview={false} width={50} src='/CNGRS.svg' />
           <Flex justify='center' align='center'>
             <Upload {...avatarProps}>
-              { avatarLoading ? <Spin size="large" /> : <Avatar src={user.avatar} size="large" icon={<UserOutlined />} /> }
+              { avatarLoading ? <Spin size="large" /> : <Avatar shape="square" src={user.avatar} size="large" icon={<UserOutlined />} /> }
             </Upload>
-            <Title style={{ marginLeft: 10 }}>{user.name.split(' ')[0]}</Title>
+            <Title style={{ marginLeft: 10, marginTop: 20 }}>{user.name.split(' ')[0]}</Title>
           </Flex>
       </Header>
         <Content style={{ margin: '24px 24px'}}>
