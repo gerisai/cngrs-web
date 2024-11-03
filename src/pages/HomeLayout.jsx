@@ -1,21 +1,22 @@
 import { useState } from 'react';
 import { AppstoreOutlined, UserOutlined, TableOutlined, TeamOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Layout, FloatButton, Image, Typography, Avatar, Flex, Upload, Spin, Row, Col } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Layout, FloatButton, Image, Typography, Avatar, Upload, Spin, Row, Col } from 'antd';
+import { useNavigate, Outlet } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 // Project imports
 import { useUser } from '../lib/context/user';
 import { useNotification } from '../lib/context/notification';
 import User from '../components/User';
 import Unathorized from './Unathorized';
+import Loading from './Loading';
 import useUsers from '../hooks/useUsers';
 import canRoleDo from '../util/roleValidation';
 
 const { Content, Header, Footer } = Layout;
 const { Title } = Typography;
 
-const HomeLayout = ({ children }) => {
-  const { user, logout } = useUser();
+const HomeLayout = () => {
+  const { user, logout, authLoading } = useUser();
   const api = useNotification();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // current user edit
@@ -53,12 +54,9 @@ const HomeLayout = ({ children }) => {
     }
   });
 
-  if (!user) {
-    return (
-      <Unathorized/>
-    )
-  }
-
+  if (authLoading) return <Loading/> 
+  if (!user) return <Unathorized/>
+  
   return (
     <>
     <Layout className='main-flex'>
@@ -78,7 +76,7 @@ const HomeLayout = ({ children }) => {
       </Header>
         <Content style={{ margin: '24px 24px'}}>
           <div className='content'>
-            { children }
+            <Outlet/>
           </div>
         </Content>
         <Footer className='footer'>

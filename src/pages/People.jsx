@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { EnvironmentOutlined, HomeOutlined } from '@ant-design/icons';
 // Project imports
 import { useUser } from '../lib/context/user';
-import HomeLayout from './HomeLayout';
 import usePeople from '../hooks/usePeople';
 import Loading from './Loading';
 import Error from './Error';
@@ -73,7 +72,7 @@ function People() {
   };
 
   return (
-      <HomeLayout>
+      <>
       <Flex gap='small' wrap style={{ marginBottom: 20 }} justify='space-between' >
       { canRoleDo(user.role, 'CREATE', 'person') ?
           <Button type="primary" size="large" onClick={() => {
@@ -122,7 +121,7 @@ function People() {
         { open ?
         <Person open={open} setOpen={setOpen} type={actionType} personId={personId} />
         : null } 
-      </HomeLayout>
+        </>
   )
 }
 

@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 // Project imports
-import HomeLayout from './HomeLayout.jsx';
 import { useUser } from '../lib/context/user';
 import { useNotification } from '../lib/context/notification';
 import usePeople from '../hooks/usePeople';
@@ -54,7 +53,7 @@ function Person() {
   }
 
   return (
-    <HomeLayout>
+    <>
       <Flex vertical justify='center' align='center'>
         <Card
           title={<Title style={{ textAlign: 'center' }}>{person.name}</Title>}
@@ -88,7 +87,7 @@ function Person() {
           </Flex>
         </Card>
       </Flex>
-    </HomeLayout>
+    </>
   )
 }
 
