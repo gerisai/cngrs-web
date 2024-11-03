@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Avatar, List, Button, Typography } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 // Project imports
-import HomeLayout from './HomeLayout';
 import { useUser } from '../lib/context/user';
 import useUsers from '../hooks/useUsers';
 import Loading from './Loading';
@@ -37,11 +36,10 @@ function Users() {
   }
 
   return (
-      <HomeLayout>
+      <>
         { canRoleDo(user.role, 'CREATE', 'user') ?
           <Button type="primary" size="large" onClick={() => {
           setActionType('Crear')
-          console.log(users)
           setOpen(true)
           }}>
             Crear
@@ -77,7 +75,7 @@ function Users() {
           { open ?
           <User open={open} setOpen={setOpen} type={actionType} username={username} />
           : null }
-      </HomeLayout>
+      </>
   )
 }
 

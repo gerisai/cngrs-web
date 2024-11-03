@@ -1,21 +1,22 @@
 import { useState } from 'react';
 import { AppstoreOutlined, UserOutlined, TableOutlined, TeamOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Layout, FloatButton, Button, Image, Typography, Avatar, Flex, Upload, Spin } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Layout, FloatButton, Image, Typography, Avatar, Upload, Spin, Row, Col } from 'antd';
+import { useNavigate, Outlet } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 // Project imports
 import { useUser } from '../lib/context/user';
 import { useNotification } from '../lib/context/notification';
 import User from '../components/User';
 import Unathorized from './Unathorized';
+import Loading from './Loading';
 import useUsers from '../hooks/useUsers';
 import canRoleDo from '../util/roleValidation';
 
 const { Content, Header, Footer } = Layout;
 const { Title } = Typography;
 
-const HomeLayout = ({ children }) => {
-  const { user, logout } = useUser();
+const HomeLayout = () => {
+  const { user, logout, authLoading } = useUser();
   const api = useNotification();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // current user edit
@@ -53,28 +54,29 @@ const HomeLayout = ({ children }) => {
     }
   });
 
-  if (!user) {
-    return (
-      <Unathorized/>
-    )
-  }
-
+  if (authLoading) return <Loading/> 
+  if (!user) return <Unathorized/>
+  
   return (
     <>
     <Layout className='main-flex'>
       <Layout>
       <Header className='header'>
           <Image alt='cnrgs-logo' preview={false} width={50} src='/CNGRS.svg' />
-          <Flex justify='center' align='center'>
+          <Row>
+            <Col sm={4}>
             <Upload {...avatarProps}>
               { avatarLoading ? <Spin size="large" /> : <Avatar shape="square" src={user.avatar} size="large" icon={<UserOutlined />} /> }
             </Upload>
-            <Title style={{ marginLeft: 10, marginTop: 20 }}>{user.name.split(' ')[0]}</Title>
-          </Flex>
+            </Col>
+            <Col xs={0} sm={20}>
+            <Title style={{ marginLeft: 10, marginTop: 10 }}>{user.name.split(' ')[0]}</Title>
+            </Col>
+          </Row>
       </Header>
         <Content style={{ margin: '24px 24px'}}>
           <div className='content'>
-            { children }
+            <Outlet/>
           </div>
         </Content>
         <Footer className='footer'>

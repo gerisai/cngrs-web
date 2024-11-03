@@ -9,6 +9,7 @@ export function useUser() {
 
 export function UserProvider({ children }) {
     const [user,setUser] = useState(null);
+    const [authLoading,setAuthLoading] = useState(true);
 
     async function login({ username, password }) {
     
@@ -42,6 +43,8 @@ export function UserProvider({ children }) {
           setUser(null);
           const error = err.response ? err.response.data.message : err.message;
           throw new Error(error);
+        } finally {
+          setAuthLoading(false);
         }
     }
 
@@ -50,7 +53,7 @@ export function UserProvider({ children }) {
     },[]);
 
     return (
-      <UserContext.Provider value={{ user, login, logout }}>
+      <UserContext.Provider value={{ user, login, logout, authLoading }}>
         {children}
       </UserContext.Provider>
     )
