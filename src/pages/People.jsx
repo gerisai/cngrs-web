@@ -1,8 +1,8 @@
 import { Table, Typography, Button, AutoComplete, Row, Col } from 'antd';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // Project imports
-import { UserContext } from '../hooks/UserContext';
+import { useUser } from '../lib/context/user';
 import HomeLayout from './HomeLayout';
 import usePeople from '../hooks/usePeople';
 import Loading from './Loading';
@@ -18,7 +18,7 @@ function onlyUnique(value, index, array) {
 }
 
 function People() {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const { readPeople } = usePeople();
 
   // Drawer render state

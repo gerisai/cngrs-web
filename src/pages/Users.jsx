@@ -1,10 +1,10 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Avatar, List, Button, Typography } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 // Project imports
-import { UserContext } from '../hooks/UserContext';
 import HomeLayout from './HomeLayout';
-import useUser from '../hooks/useUser';
+import { useUser } from '../lib/context/user';
+import useUsers from '../hooks/useUsers';
 import Loading from './Loading';
 import Error from './Error';
 import Unathorized from './Unathorized';
@@ -14,8 +14,8 @@ import canRoleDo from '../util/roleValidation';
 const { Title } = Typography;
 
 function Users() {
-  const { user } = useContext(UserContext);
-  const { readUsers } = useUser();
+  const { user } = useUser();
+  const { readUsers } = useUsers();
 
   const [open, setOpen] = useState(false);
   const [actionType, setActionType] = useState(null);
@@ -41,6 +41,7 @@ function Users() {
         { canRoleDo(user.role, 'CREATE', 'user') ?
           <Button type="primary" size="large" onClick={() => {
           setActionType('Crear')
+          console.log(users)
           setOpen(true)
           }}>
             Crear
@@ -55,13 +56,14 @@ function Users() {
             return {
               username: user.username,
               name: user.name,
-              role: user.role
+              role: user.role,
+              avatar: user.avatar
             }
           })}
           renderItem={(item, index) => (
             <List.Item>
               <List.Item.Meta
-                // avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} />} TODO: Add avatar feature
+                avatar={<Avatar src={item.avatar || `https://api.dicebear.com/9.x/initials/svg?seed=${item.name}`} />}
                 title={<a onClick={() => {
                     setActionType('Editar')
                     setUsername(item.username)

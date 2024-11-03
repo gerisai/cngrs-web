@@ -1,19 +1,18 @@
 import { Button, Col, Drawer, Form, Input, Row, Space, Select, Skeleton, Flex, Popconfirm, Switch } from 'antd';
-import { useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { CloseCircleOutlined } from '@ant-design/icons';
 // Project imports
 import validationRules from '../util/validation';
-import { UserContext } from '../hooks/UserContext';
-import { NotificationContext } from '../hooks/NotificationContext';
-import useUser from '../hooks/useUser';
+import { useUser } from '../lib/context/user';
+import { useNotification } from '../lib/context/notification';
+import useUsers from '../hooks/useUsers';
 import createRandomPassword from '../util/passwords';
 import canRoleDo from '../util/roleValidation';
 
 function User({ open, setOpen, type, username }) {
-  const { user: currentUser } = useContext(UserContext);
-  const { createUser, readUser, updateUser, deleteUser } = useUser();
-  const api = useContext(NotificationContext);
+  const { user: currentUser } = useUser();
+  const { createUser, readUser, updateUser, deleteUser } = useUsers();
+  const api = useNotification();
 
   const queryClient = useQueryClient();
 
@@ -49,6 +48,7 @@ function User({ open, setOpen, type, username }) {
       try {
         setOpen(false);
         await updateUser(values);
+        if (values.username === currentUser.username) window.location.reload(); // Update UI for current user
         api.success({ message: 'Éxito', description: 'Usuario actualizado', placement: 'top', showProgress: true });
       } catch(err) {
         api.error({ message: 'Error', placement: 'top', description: err.message });

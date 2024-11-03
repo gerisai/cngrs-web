@@ -1,11 +1,11 @@
 import { Flex, Typography, Card, QRCode, Button, Tooltip } from 'antd';
 import { useParams } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 // Project imports
 import HomeLayout from './HomeLayout.jsx';
-import { UserContext } from '../hooks/UserContext';
-import { NotificationContext } from '../hooks/NotificationContext';
+import { useUser } from '../lib/context/user';
+import { useNotification } from '../lib/context/notification';
 import usePeople from '../hooks/usePeople';
 import canRoleDo from '../util/roleValidation';
 import Loading from './Loading';
@@ -15,8 +15,8 @@ import Unathorized from './Unathorized';
 const { Title } = Typography;
 
 function Person() {
-  const { user } = useContext(UserContext);
-  const api = useContext(NotificationContext);
+  const { user } = useUser();
+  const api = useNotification();
   const queryClient = useQueryClient();
   const { readPerson, updatePerson } = usePeople();
   const { personId } = useParams();

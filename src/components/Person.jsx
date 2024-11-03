@@ -1,18 +1,17 @@
 import { Button, Col, Drawer, Form, Input, Row, Space, Skeleton, Flex, Popconfirm, Switch, Select } from 'antd';
-import { useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { CloseCircleOutlined } from '@ant-design/icons';
 // Project imports
 import validationRules from '../util/validation';
-import { UserContext } from '../hooks/UserContext';
-import { NotificationContext } from '../hooks/NotificationContext';
+import { useUser } from '../lib/context/user';
+import { useNotification } from '../lib/context/notification';
 import usePeople from '../hooks/usePeople';
 import canRoleDo from '../util/roleValidation';
 
 function Person({ open, setOpen, type, personId }) {
-  const { user: currentUser } = useContext(UserContext);
+  const { user: currentUser } = useUser();
   const { createPerson, readPerson, updatePerson, deletePerson } = usePeople();
-  const api = useContext(NotificationContext);
+  const api = useNotification();
 
   const queryClient = useQueryClient();
 

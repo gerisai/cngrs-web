@@ -1,24 +1,23 @@
-import { useContext } from 'react';
 import { Flex, Typography, Input, Button, Form } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 // Project imports
 import validationRules from '../util/validation';
-import { NotificationContext } from '../hooks/NotificationContext';
-import useAuth from '../hooks/useAuth';
+import { useUser } from '../lib/context/user';
+import { useNotification } from '../lib/context/notification';
 
 const { Title } = Typography;
 
 function Login() {
-  const api = useContext(NotificationContext);
-  
+  const api = useNotification();
+
   const navigate = useNavigate();
-  const { loginUser } = useAuth();
+  const { login } = useUser(); 
 
   const { mutateAsync: handleLogin, isPending } = useMutation({
     mutationFn: async (values) => {
       try {
-        await loginUser(values);
+        await login(values);
         navigate('/people');
       } catch(err) {
         api.error({ message: 'Error', description: err.message, placement: 'top', showProgress: true });
