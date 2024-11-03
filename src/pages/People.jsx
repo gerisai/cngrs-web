@@ -1,6 +1,7 @@
-import { Table, Typography, Button, AutoComplete, Row, Col } from 'antd';
-import { useState } from 'react';
+import { List, Typography, Button, AutoComplete, Flex, Space } from 'antd';
+import { useState, createElement } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { EnvironmentOutlined, HomeOutlined } from '@ant-design/icons';
 // Project imports
 import { useUser } from '../lib/context/user';
 import HomeLayout from './HomeLayout';
@@ -11,11 +12,14 @@ import Unathorized from './Unathorized';
 import Person from '../components/Person';
 import canRoleDo from '../util/roleValidation';
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
-function onlyUnique(value, index, array) {
-  return array.indexOf(value) === index;
-}
+const IconText = ({ icon, text }) => (
+  <Space>
+    {createElement(icon)}
+    {text}
+  </Space>
+);
 
 function People() {
   const { user } = useUser();
@@ -49,50 +53,13 @@ function People() {
 
   let data = queryPeople ? queryPeople.map((person,i) => ({
       key: i,
-      name: {personId: person.personId, name: person.name}, // must be passed to state eventually in columns
+      personId: person.personId,
+      name: person.name,
       zone: person.zone,
       branch: person.branch,
       registered: person.registered
   })) : null;
-  const personNames = data ? data.map((person) => person.name.name) : null;
-  const zones = data ? data.map((person) => person.zone).filter(onlyUnique) : null;
-  const branches = data ? data.map((person) => person.branch).filter(onlyUnique) : null;
-
-
-  const columns = [
-    {
-      title: 'Nombre',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text) => <a onClick={() => {
-        setActionType('Editar')
-        setPersonId(text.personId)
-        setOpen(true)
-      }}>{text.name}</a>,
-    },
-    {
-      title: 'Zona',
-      dataIndex: 'zone',
-      key: 'zone',
-      filters: zones.map((zone) => ({ text: zone, value: zone })),
-      onFilter: (filter, record) => record.zone.includes(filter)
-    },
-    {
-      title: 'Localidad',
-      dataIndex: 'branch',
-      key: 'branch',
-      filters: branches.map((branch) => ({ text: branch, value: branch })),
-      onFilter: (filter, record) => record.branch.includes(filter)
-    },
-    {
-      title: 'Registrado',
-      dataIndex: 'registered',
-      key: 'registered',
-      render:  (text) => <Text>{text ? 'Si' : 'No'}</Text>,
-      filters: [true, false].map((registered)=> ({ text: registered ? 'Si' : 'No', value: registered})),
-      onFilter: (filter, record) => record.registered === filter
-    }
-  ]
+  const personNames = data ? data.map((person) => person.name) : null;
 
   const onSelect = (match) => {
     setPeople(data.filter((person) => person.name.name === match));
@@ -101,14 +68,13 @@ function People() {
   const handleSearch = (value) => {
     setPeople(null)
     const matches = personNames.filter((name) => name.includes(value.toUpperCase()));
-    setPeople(data.filter((person) => person.name.name.includes(value.toUpperCase()))); // filter in real time
+    setPeople(data.filter((person) => person.name.includes(value.toUpperCase()))); // filter in real time
     setOptions(!value ? [] : matches.map(m => ({ value: m })));
   };
 
   return (
       <HomeLayout>
-      <Row style={{ marginBottom: 20 }} justify="space-between">
-      <Col>
+      <Flex gap='small' wrap style={{ marginBottom: 20 }} justify='space-between' >
       { canRoleDo(user.role, 'CREATE', 'person') ?
           <Button type="primary" size="large" onClick={() => {
           setActionType('Crear')
@@ -117,8 +83,6 @@ function People() {
             Crear
           </Button>
         : null }
-      </Col>
-      <Col>
       <AutoComplete
         popupMatchSelectWidth={252}
         style={{
@@ -130,19 +94,34 @@ function People() {
         size="large"
         placeholder='Buscar...'
       />
-      </Col>
-      </Row>
-        <Table 
-          locale={{
-            emptyText: <Title>Sin registros</Title>
-          }}
-          pagination={false}
-          columns={columns}
-          dataSource={ people || data } 
+      </Flex>
+      <List
+        style={{ marginTop: 20 }}
+        locale={{
+          emptyText: <Title>Sin asistentes</Title>
+        }}
+        dataSource={people || data}
+          renderItem={(item, index) => (
+            <List.Item>
+              <List.Item.Meta
+                title={<a onClick={() => {
+                    setActionType('Editar')
+                    setPersonId(item.personId)
+                    setOpen(true)
+                    }}>{item.name}</a>}
+                description={
+                  <Flex gap='middle'>
+                    <IconText icon={EnvironmentOutlined} text={item.zone}/>
+                    <IconText icon={HomeOutlined} text={item.branch}/>
+                  </Flex>
+                }
+              />
+            </List.Item>
+          )}
         />
-          { open ?
-          <Person open={open} setOpen={setOpen} type={actionType} personId={personId} />
-          : null }
+        { open ?
+        <Person open={open} setOpen={setOpen} type={actionType} personId={personId} />
+        : null } 
       </HomeLayout>
   )
 }
