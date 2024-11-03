@@ -24,8 +24,9 @@ function App() {
     <NotificationProvider>
       <Routes>
         <Route path='/' element={ <HomeLayout/> }>
-          <Route path='/person/:personId' element={ <Person/> } />
+          <Route path='/' element={ <People/> } />
           <Route path='/people' element={ <People/> } />
+          <Route path='/person/:personId' element={ <Person/> } />
           <Route path='/users' element={ <Users/> } />
         </Route>
         <Route path='/login' element={ <Login/> } />
