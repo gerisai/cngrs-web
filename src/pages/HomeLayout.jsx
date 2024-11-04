@@ -95,7 +95,7 @@ const HomeLayout = () => {
           <FloatButton icon={<TeamOutlined />} tooltip={<div>Usuarios</div>} onClick={() => navigate('/users')}/> 
           : null }
           <FloatButton icon={<UserOutlined />} tooltip={<div>Usuario</div>} onClick={() => setOpen(true)}/>
-          <FloatButton icon={<TableOutlined />} tooltip={<div>Jóvenes</div>} onClick={() => navigate('/people')}/>
+          <FloatButton icon={<TableOutlined />} tooltip={<div>Asistentes</div>} onClick={() => navigate('/people')}/>
         </FloatButton.Group>
         { open ?
           <User open={open} setOpen={setOpen} type={'Editar'} username={user.username} />
