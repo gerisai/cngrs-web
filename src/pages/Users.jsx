@@ -9,6 +9,7 @@ import Error from './Error';
 import Unathorized from './Unathorized';
 import User from '../components/User';
 import canRoleDo from '../util/roleValidation';
+import { LangMappings } from '../util/i8n';
 
 const { Title } = Typography;
 
@@ -70,7 +71,7 @@ function Users() {
                     setUsername(item.username)
                     setOpen(true)
                     }}>{item.name}</a>}
-                description={item.role}
+                description={ LangMappings.user.roles[item.role] }
               />
             </List.Item>
           )}
