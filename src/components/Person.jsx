@@ -185,10 +185,10 @@ function Person({ open, setOpen, type, personId }) {
           <Row></Row>
             <Col span={24}>
             <Form.Item
-                name="registered"
+                name="accessed"
                 label="¿Registrado?"
               >
-                <Switch checked={person ? person.accessed : false } />
+                <Switch defaultChecked={person ? person.accessed : false } />
               </Form.Item>
             </Col>
           </Row>

@@ -1,4 +1,4 @@
-import { Flex, Row, Col, Typography, Card, QRCode, Button, Tooltip } from 'antd';
+import { Flex, Row, Col, Typography, Card, QRCode, Button, Badge } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -52,38 +52,49 @@ function Person() {
     return <Error message={error.message}/>;
   }
 
+  var personCard = (
+    <Card
+      title={<Title style={{ textAlign: 'center', textWrap: 'wrap' }}>{person.name}</Title>}
+    >
+      <Title style={{ margin:0 }} level={5}>Zona: {person.zone}</Title>
+      <br />
+      <Title style={{ margin:0 }} level={5}>Localidad: {person.branch}</Title>
+      <br />
+      <Title style={{ margin:0 }} level={5}>Cuarto: {person.room}</Title>
+      <Flex gap={10} style={{ margin: 12 }} vertical justify='center' align='center'>
+      { canRoleDo(user.role, 'UPDATE', 'person') ?
+      <> 
+      {
+        person.accessed ?
+        null
+      :
+      <Button disabled={person.accessed} type="primary" size="large" onClick={registerAccess}>
+        Registrar acceso
+      </Button>
+      }
+      <Button type="dashed" size="large" onClick={() => setShowQR(!showQr)}>
+        { showQr ? 'Esconder QR' : 'Mostrar QR' }
+      </Button>
+      </>
+      : null }
+      { showQr ?
+        <QRCode style={{ margin: 12 }} value={`${import.meta.env.VITE_WEB_URL}/person/${personId}`} errorLevel='H' icon='/CNGRS.svg'/>
+      : null}
+      </Flex>
+    </Card>
+  );
+
   return (
     <>
       <Row justify="center">
         <Col>
-          <Card
-            title={<Title style={{ textAlign: 'center', textWrap: 'wrap' }}>{person.name}</Title>}
-          >
-            <Title style={{ margin:0 }} level={5}>Zona: {person.zone}</Title>
-            <br />
-            <Title style={{ margin:0 }} level={5}>Localidad: {person.branch}</Title>
-            <br />
-            <Title style={{ margin:0 }} level={5}>Registrado: {person.registered ? 'Si' : 'No'}</Title>
-            <br />
-            <Title style={{ margin:0 }} level={5}>Cuarto: {person.room}</Title>
-            <Flex gap={10} style={{ margin: 12 }} vertical justify='center' align='center'>
-            { canRoleDo(user.role, 'UPDATE', 'person') ?
-            <>
-            <Tooltip title={person.accessed ? 'Ya fue registrado el acceso' : ''}>
-              <Button disabled={person.accessed} type="primary" size="large" onClick={registerAccess}>
-                Registrar acceso
-              </Button>
-            </Tooltip>
-            <Button type="dashed" size="large" onClick={() => setShowQR(!showQr)}>
-              { showQr ? 'Esconder QR' : 'Mostrar QR' }
-            </Button>
-            </>
-            : null }
-            { showQr ?
-              <QRCode style={{ margin: 12 }} value={`${import.meta.env.VITE_WEB_URL}/person/${personId}`} errorLevel='H' icon='/CNGRS.svg'/>
-            : null}
-            </Flex>
-          </Card>
+          { person.accessed ?
+          <Badge.Ribbon color='green' text='Registrado'>
+            { personCard }
+          </Badge.Ribbon>
+          :
+            personCard
+          }
         </Col>
       </Row>
     </>

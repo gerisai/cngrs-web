@@ -1,7 +1,8 @@
 import { List, Typography, Button, AutoComplete, Flex, Space, Badge } from 'antd';
 import { useState, createElement } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { EnvironmentOutlined, HomeOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined, HomeOutlined, CheckCircleOutlined, QrcodeOutlined } from '@ant-design/icons';
 // Project imports
 import { useUser } from '../lib/context/user';
 import usePeople from '../hooks/usePeople';
@@ -23,6 +24,7 @@ const IconText = ({ icon, text }) => (
 function People() {
   const { user } = useUser();
   const { readPeople } = usePeople();
+  const navigate = useNavigate();
 
   // Drawer render state
   const [open, setOpen] = useState(false);
@@ -102,7 +104,11 @@ function People() {
         }}
         dataSource={people || data}
           renderItem={(item, index) => (
-            <List.Item>
+            <List.Item
+              extra={
+                <Button type="link" onClick={() => navigate(`/person/${item.personId}`)} icon={<QrcodeOutlined/>}/>
+              }
+            >
               <List.Item.Meta
                 title={<>
                   <a onClick={() => {
