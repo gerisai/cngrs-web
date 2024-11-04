@@ -173,12 +173,15 @@ function User({ open, setOpen, type, username }) {
           </Row>
           <Row>
             <Col span={24}>
-            <Form.Item
+            { type === 'Crear' ?
+              <Form.Item
                 name="sendMail"
                 label="¿Enviar email de bienvenida?"
               >
                 <Switch />
               </Form.Item>
+            : null
+            }
             </Col>
           </Row>
           <Space>
