@@ -61,7 +61,7 @@ function People() {
   const personNames = data ? data.map((person) => person.name) : null;
 
   const onSelect = (match) => {
-    setPeople(data.filter((person) => person.name.name === match));
+    setPeople(data.filter((person) => person.name === match));
   };
 
   const handleSearch = (value) => {
