@@ -10,6 +10,7 @@ export function useUser() {
 export function UserProvider({ children }) {
     const [user,setUser] = useState(null);
     const [authLoading,setAuthLoading] = useState(true);
+    const [authError,setAuthError] = useState('');
 
     async function login({ username, password }) {
     
@@ -42,7 +43,7 @@ export function UserProvider({ children }) {
         } catch(err) {
           setUser(null);
           const error = err.response ? err.response.data.message : err.message;
-          throw new Error(error);
+          setAuthError(error);
         } finally {
           setAuthLoading(false);
         }
@@ -53,7 +54,7 @@ export function UserProvider({ children }) {
     },[]);
 
     return (
-      <UserContext.Provider value={{ user, login, logout, authLoading }}>
+      <UserContext.Provider value={{ user, login, logout, authLoading, authError }}>
         {children}
       </UserContext.Provider>
     )

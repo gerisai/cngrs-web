@@ -4,7 +4,7 @@ const { Title, Text } = Typography;
 
 function Error ({ message }) {
   return (
-    <Flex vertical className='main-flex' align='center' justify='center'>
+    <Flex vertical className='main-flex text-center' align='center' justify='center'>
       <Title>500 Ocurrió un error en el servidor</Title>
       <img style={{marginBottom: 15}} width='30%' src="/elmo_fire.gif" alt="ElmoOnFire" />
       <Text mark>Mensaje confuso pal programador</Text>

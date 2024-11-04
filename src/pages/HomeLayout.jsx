@@ -9,6 +9,7 @@ import { useNotification } from '../lib/context/notification';
 import User from '../components/User';
 import Unathorized from './Unathorized';
 import Loading from './Loading';
+import Error from './Error';
 import useUsers from '../hooks/useUsers';
 import canRoleDo from '../util/roleValidation';
 
@@ -16,7 +17,7 @@ const { Content, Header } = Layout;
 const { Title } = Typography;
 
 const HomeLayout = () => {
-  const { user, logout, authLoading } = useUser();
+  const { user, logout, authLoading, authError } = useUser();
   const api = useNotification();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // current user edit
@@ -64,7 +65,11 @@ const HomeLayout = () => {
     }
   });
 
-  if (authLoading) return <Loading/> 
+  if (authLoading) return <Loading/>
+  if (authError) {
+    if (authError.includes('Unauthorized') || authError.includes('Forbbiden')) return <Unathorized/>;
+    return <Error message={authError}/>;
+  }
   if (!user) return <Unathorized/>
   
   return (
