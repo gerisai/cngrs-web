@@ -94,6 +94,7 @@ function People() {
         placeholder='Buscar...'
       />
       </Flex>
+      <div className='scroll'>
       <List
         style={{ marginTop: 20 }}
         locale={{
@@ -118,6 +119,7 @@ function People() {
             </List.Item>
           )}
         />
+        </div>
         { open ?
         <Person open={open} setOpen={setOpen} type={actionType} personId={personId} />
         : null } 
