@@ -1,7 +1,7 @@
-import { List, Typography, Button, AutoComplete, Flex, Space } from 'antd';
+import { List, Typography, Button, AutoComplete, Flex, Space, Badge } from 'antd';
 import { useState, createElement } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { EnvironmentOutlined, HomeOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined, HomeOutlined, CheckCircleOutlined } from '@ant-design/icons';
 // Project imports
 import { useUser } from '../lib/context/user';
 import usePeople from '../hooks/usePeople';
@@ -56,7 +56,7 @@ function People() {
       name: person.name,
       zone: person.zone,
       branch: person.branch,
-      registered: person.registered
+      accessed: person.accessed
   })) : null;
   const personNames = data ? data.map((person) => person.name) : null;
 
@@ -104,11 +104,18 @@ function People() {
           renderItem={(item, index) => (
             <List.Item>
               <List.Item.Meta
-                title={<a onClick={() => {
+                title={<>
+                  <a onClick={() => {
                     setActionType('Editar')
                     setPersonId(item.personId)
                     setOpen(true)
-                    }}>{item.name}</a>}
+                    }}>{item.name}</a>
+                    { item.accessed ?
+                    <Badge offset={[5,-3]} count={<CheckCircleOutlined style={{color: '#52c41a' }}/> }/>
+                    : null
+                    }
+                  </>
+                }
                 description={
                   <Flex gap='middle'>
                     <IconText icon={EnvironmentOutlined} text={item.zone}/>
