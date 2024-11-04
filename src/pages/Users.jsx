@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Avatar, List, Button, Typography } from 'antd';
+import { Avatar, List, Button, Typography, Flex } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 // Project imports
 import { useUser } from '../lib/context/user';
@@ -9,6 +9,7 @@ import Error from './Error';
 import Unathorized from './Unathorized';
 import User from '../components/User';
 import canRoleDo from '../util/roleValidation';
+import { LangMappings } from '../util/i8n';
 
 const { Title } = Typography;
 
@@ -37,6 +38,7 @@ function Users() {
 
   return (
       <>
+      <Flex gap='small' wrap style={{ marginBottom: 20 }} justify='space-between' >
         { canRoleDo(user.role, 'CREATE', 'user') ?
           <Button type="primary" size="large" onClick={() => {
           setActionType('Crear')
@@ -45,6 +47,8 @@ function Users() {
             Crear
           </Button>
         : null }
+      </Flex>
+        <div className='scroll'>
         <List
           style={{ marginTop: 20 }}
           locale={{
@@ -67,11 +71,12 @@ function Users() {
                     setUsername(item.username)
                     setOpen(true)
                     }}>{item.name}</a>}
-                description={item.role}
+                description={ LangMappings.user.roles[item.role] }
               />
             </List.Item>
           )}
         />
+        </div>
           { open ?
           <User open={open} setOpen={setOpen} type={actionType} username={username} />
           : null }

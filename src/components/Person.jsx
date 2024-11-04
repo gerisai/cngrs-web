@@ -188,7 +188,7 @@ function Person({ open, setOpen, type, personId }) {
                 name="registered"
                 label="¿Registrado?"
               >
-                <Switch checked={person ? person.registered : false } />
+                <Switch checked={person ? person.accessed : false } />
               </Form.Item>
             </Col>
           </Row>

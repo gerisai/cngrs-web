@@ -1,14 +1,24 @@
 import { Flex, Typography, Input, Button, Form } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 // Project imports
 import validationRules from '../util/validation';
 import { useUser } from '../lib/context/user';
 import { useNotification } from '../lib/context/notification';
+import Loading from './Loading';
 
 const { Title } = Typography;
 
 function Login() {
+  const { user, authLoading } = useUser();
+
+  if (authLoading) return <Loading/> 
+  
+  useEffect(() =>{
+    if (user) return navigate('/');
+  },[])
+
   const api = useNotification();
 
   const navigate = useNavigate();

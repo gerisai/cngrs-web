@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AppstoreOutlined, UserOutlined, TableOutlined, TeamOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Layout, FloatButton, Image, Typography, Avatar, Upload, Spin, Row, Col } from 'antd';
+import { Button, Layout, FloatButton, Image, Typography, Avatar, Upload, Spin, Row, Col, message } from 'antd';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 // Project imports
@@ -12,7 +12,7 @@ import Loading from './Loading';
 import useUsers from '../hooks/useUsers';
 import canRoleDo from '../util/roleValidation';
 
-const { Content, Header, Footer } = Layout;
+const { Content, Header } = Layout;
 const { Title } = Typography;
 
 const HomeLayout = () => {
@@ -21,7 +21,17 @@ const HomeLayout = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // current user edit
   const [avatarLoading, setAvalarLoading] = useState(false); 
+  const [count,setCount] = useState(1);
   const { uploadAvatar } = useUsers();
+
+  const easterEgg = () => {
+    setCount(count+1)
+    if (count > 3 && count < 7) api.error({ message: `Autodestrucción en ${7 - count}`, placement: 'top' })
+    if (count === 7) api.success({ 
+      message: `CNGRS Web ©${new Date().getFullYear()}`, 
+      description:  'Made by GIDP with 💜',
+      placement: 'top' })
+  }
 
   const avatarProps = {
     name: 'avatar',
@@ -62,7 +72,7 @@ const HomeLayout = () => {
     <Layout className='main-flex'>
       <Layout>
       <Header className='header'>
-          <Image alt='cnrgs-logo' preview={false} width={50} src='/CNGRS.svg' />
+          <Button onClick={easterEgg} type='link'><Image alt='cnrgs-logo' preview={false} width={50} src='/CNGRS.svg' /></Button>
           <Row>
             <Col sm={4}>
             <Upload {...avatarProps}>
@@ -79,9 +89,6 @@ const HomeLayout = () => {
             <Outlet/>
           </div>
         </Content>
-        <Footer className='footer'>
-        CNGRS Web ©{new Date().getFullYear()} Made with 💜
-      </Footer>
         <FloatButton.Group shape="circle" style={{ right: 24 }} icon={<AppstoreOutlined />} trigger="click" type="primary">
           <FloatButton icon={<LogoutOutlined />} tooltip={<div>Cerrar Sesión</div>} onClick={logoutUser}/>
           { canRoleDo(user.role, 'LIST', 'user') ?

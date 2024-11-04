@@ -23,14 +23,28 @@
   padding: 24px;
   min-height: 360px;
   border-radius: 8px;
-  /* background-color: #282828; */
-}
-
-.menu {
-  border-radius: 8px;
-  background-color: #a02669;
 }
 
 .footer {
   text-align: center;
+}
+
+.scroll {
+  height: 70vh;
+  overflow: auto;
+  padding: 0 16px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #141414;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00000076;
+  border-radius: 10px;
+  opacity: 0;
 }
