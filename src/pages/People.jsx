@@ -1,4 +1,4 @@
-import { List, Typography, Button, AutoComplete, Flex, Space, Badge } from 'antd';
+import { List, Typography, Button, AutoComplete, Flex, Space, Badge, Skeleton } from 'antd';
 import { useState, createElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -44,7 +44,11 @@ function People() {
   });
 
   if (isPending) {
-    return <Loading/>;
+    return (
+      <Flex align='center' justify='center'>
+        <Skeleton active />
+      </Flex>
+    );
   }
 
   if (error) {

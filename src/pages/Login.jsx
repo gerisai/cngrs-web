@@ -22,7 +22,7 @@ function Login() {
   const api = useNotification();
 
   const navigate = useNavigate();
-  const { login } = useUser(); 
+  const { login } = useUser();
 
   const { mutateAsync: handleLogin, isPending } = useMutation({
     mutationFn: async (values) => {
