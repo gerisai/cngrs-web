@@ -7,6 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useUser } from '../lib/context/user';
 import { useNotification } from '../lib/context/notification';
 import User from '../components/User';
+import Error from './Error';
 import Unathorized from './Unathorized';
 import Loading from './Loading';
 import useUsers from '../hooks/useUsers';
@@ -16,7 +17,7 @@ const { Content, Header } = Layout;
 const { Title } = Typography;
 
 const HomeLayout = () => {
-  const { user, logout, authLoading } = useUser();
+  const { user, logout, authLoading, authError } = useUser();
   const api = useNotification();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // current user edit
@@ -65,7 +66,10 @@ const HomeLayout = () => {
   });
 
   if (authLoading) return <Loading/>
-  if (!user) return <Unathorized/>
+  if (authError) {
+    if (authError.includes('Unauthorized') || authError.includes('Forbbiden')) return <Unathorized/>;
+    return <Error message={authError}/>;
+  }
   
   return (
     <>
