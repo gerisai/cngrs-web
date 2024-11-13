@@ -1,4 +1,4 @@
-import { Button, Typography, Drawer, Form, Upload, Space, Switch } from 'antd';
+import { Button, Typography, Drawer, Form, Upload, Space, Switch, Flex } from 'antd';
 import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 // Project imports
 import { useNotification } from '../lib/context/notification';
@@ -77,10 +77,12 @@ function BulkCreate({ open, setOpen, type }) {
             <Text level={5}>Sube un archivo CSV con los siguientes campos: {csvFields[type].join(',')}</Text>
         </Space>
         <Form.Item>
-          <Button href={assetUrl} style={{ marginRight: 15 }} icon={<DownloadOutlined/>} type="primary">Ejemplo</Button>
+          <Flex wrap justify='flex-start' gap='middle'>
+          <Button href={assetUrl} icon={<DownloadOutlined/>} type="primary">Ejemplo</Button>
           <Upload {...csvProps}>
               <Button icon={<UploadOutlined/>}>Subir archivo</Button>
           </Upload>
+          </Flex>
         </Form.Item>
         <Form.Item
             name="sendMail"
