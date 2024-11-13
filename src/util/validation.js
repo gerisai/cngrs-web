@@ -21,7 +21,7 @@ const validationRules = {
       message: 'Ingresa un nombre',
     },
     {
-      pattern: /^[a-zA-Z\ ]+$/,
+      pattern: /^[a-zA-ZÀ-ž\ ]+$/,
       message: 'El nombre solo puede contener letras y espacios'
     }
   ],
