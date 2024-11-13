@@ -1,4 +1,4 @@
-import { Flex, Row, Col, Typography, Card, QRCode, Button, Badge } from 'antd';
+import { Flex, Row, Col, Typography, Card, QRCode, Button, Badge, Skeleton } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -22,7 +22,7 @@ function Person() {
 
   const [showQr, setShowQR] = useState(false);
 
-  const { data: person , isLoading, error } = useQuery({
+  const { data: person , isPending, error } = useQuery({
     queryFn: () => readPerson(personId),
     queryKey: ['person'],
     retry: false
@@ -43,8 +43,12 @@ function Person() {
   });
 
 
-  if (isLoading) {
-    return <Loading/>;
+  if (isPending) {
+    return (
+      <Flex align='center' justify='center'>
+        <Skeleton active />
+      </Flex>
+    );
   }
 
   if (error) {

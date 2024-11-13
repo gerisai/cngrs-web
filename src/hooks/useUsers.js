@@ -11,6 +11,16 @@ export default function useUsers() {
       }
   };
 
+  const bulkCreateUsers = async function (data,sendMail) {
+    try {
+      const res = await api.post(`/users/bulkcreate?sendMail=${sendMail}`, data);
+      return res.data.message;
+    } catch(err) {
+      const error = err.response ? err.response.data.message : err.message;
+      throw new Error(error);
+    }
+  };
+
   const readUser = async function (username) {
     try {
       const res = await api.get(`/users/${username}`);
@@ -63,6 +73,7 @@ export default function useUsers() {
 
   return {
   createUser,
+  bulkCreateUsers,
   readUser,
   readUsers,
   updateUser,

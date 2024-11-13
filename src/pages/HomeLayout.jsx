@@ -7,9 +7,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useUser } from '../lib/context/user';
 import { useNotification } from '../lib/context/notification';
 import User from '../components/User';
+import Error from './Error';
 import Unathorized from './Unathorized';
 import Loading from './Loading';
-import Error from './Error';
 import useUsers from '../hooks/useUsers';
 import canRoleDo from '../util/roleValidation';
 
@@ -66,11 +66,10 @@ const HomeLayout = () => {
   });
 
   if (authLoading) return <Loading/>
-  if (authError) {
+  if (!user && authError) {
     if (authError.includes('Unauthorized') || authError.includes('Forbbiden')) return <Unathorized/>;
     return <Error message={authError}/>;
   }
-  if (!user) return <Unathorized/>
   
   return (
     <>

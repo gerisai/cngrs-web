@@ -36,17 +36,17 @@ export function UserProvider({ children }) {
     }
 
     async function init() {
-        try {
-          const res = await api.get('/auth');
-          const { user } = res.data;
-          setUser(user);
-        } catch(err) {
-          setUser(null);
-          const error = err.response ? err.response.data.message : err.message;
-          setAuthError(error);
-        } finally {
-          setAuthLoading(false);
-        }
+      try {
+        const res = await api.get('/auth');
+        const { user } = res.data;
+        setUser(user);
+      } catch(err) {
+        setUser(null);
+        const error = err.response ? err.response.data.message : err.message;
+        setAuthError(error);
+      } finally {
+        setAuthLoading(false);
+      }
     }
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { List, Typography, Button, AutoComplete, Flex, Space, Badge } from 'antd';
+import { List, Typography, Button, AutoComplete, Flex, Space, Badge, Skeleton } from 'antd';
 import { useState, createElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -6,10 +6,10 @@ import { EnvironmentOutlined, HomeOutlined, CheckCircleOutlined, QrcodeOutlined 
 // Project imports
 import { useUser } from '../lib/context/user';
 import usePeople from '../hooks/usePeople';
-import Loading from './Loading';
 import Error from './Error';
 import Unathorized from './Unathorized';
 import Person from '../components/Person';
+import BulkCreate from '../components/BulkCreate';
 import canRoleDo from '../util/roleValidation';
 
 const { Title } = Typography;
@@ -28,6 +28,7 @@ function People() {
 
   // Drawer render state
   const [open, setOpen] = useState(false);
+  const [openBulk, setOpenBulk] = useState(false);
   const [actionType, setActionType] = useState(null);
   const [personId, setPersonId] = useState(null);
 
@@ -44,7 +45,11 @@ function People() {
   });
 
   if (isPending) {
-    return <Loading/>;
+    return (
+      <Flex align='center' justify='center'>
+        <Skeleton active />
+      </Flex>
+    );
   }
 
   if (error) {
@@ -77,12 +82,17 @@ function People() {
       <>
       <Flex gap='small' wrap style={{ marginBottom: 20 }} justify='space-between' >
       { canRoleDo(user.role, 'CREATE', 'person') ?
+          <Flex gap='small' wrap style={{ marginBottom: 20 }}>
           <Button type="primary" size="large" onClick={() => {
           setActionType('Crear')
           setOpen(true)
           }}>
             Crear
           </Button>
+          <Button size="large" onClick={() => setOpenBulk(true)}>
+            Crear muchos
+          </Button>
+          </Flex>
         : null }
       <AutoComplete
         popupMatchSelectWidth={252}
@@ -135,7 +145,10 @@ function People() {
         </div>
         { open ?
         <Person open={open} setOpen={setOpen} type={actionType} personId={personId} />
-        : null } 
+        : null }
+        { openBulk ?
+            <BulkCreate open={openBulk} setOpen={setOpenBulk} type={'asistentes'} />
+          : null }
         </>
   )
 }

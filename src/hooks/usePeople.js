@@ -11,6 +11,16 @@ export default function usePeople() {
       }
   };
 
+  const bulkCreatePeople = async function (data,sendMail) {
+    try {
+      const res = await api.post(`/people/bulkcreate?sendMail=${sendMail}`, data);
+      return res.data.message;
+    } catch(err) {
+      const error = err.response ? err.response.data.message : err.message;
+      throw new Error(error);
+    }
+  };
+
   const readPerson = async function (personId) {
     try {
       const res = await api.get(`/people/${personId}`);
@@ -53,6 +63,7 @@ export default function usePeople() {
 
   return {
   createPerson,
+  bulkCreatePeople,
   readPerson,
   readPeople,
   updatePerson,
