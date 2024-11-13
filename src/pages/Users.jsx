@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { Avatar, List, Button, Typography, Flex } from 'antd';
+import { Avatar, List, Button, Typography, Flex, Skeleton } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 // Project imports
 import { useUser } from '../lib/context/user';
 import useUsers from '../hooks/useUsers';
-import Loading from './Loading';
 import Error from './Error';
 import Unathorized from './Unathorized';
 import User from '../components/User';
+import BulkCreate from '../components/BulkCreate';
 import canRoleDo from '../util/roleValidation';
 import { LangMappings } from '../util/i8n';
 
@@ -18,17 +18,22 @@ function Users() {
   const { readUsers } = useUsers();
 
   const [open, setOpen] = useState(false);
+  const [openBulk, setOpenBulk] = useState(false);
   const [actionType, setActionType] = useState(null);
   const [username, setUsername] = useState(null);
 
-  const { data: users , isLoading, error } = useQuery({
+  const { data: users , isPending, error } = useQuery({
     queryFn: () => readUsers(),
     queryKey: ['users'],
     retry: false
   });
 
-  if (isLoading) {
-    return <Loading/>;
+  if (isPending) {
+    return (
+      <Flex align='center' justify='center'>
+        <Skeleton active />
+      </Flex>
+    );
   }
 
   if (error) {
@@ -38,14 +43,19 @@ function Users() {
 
   return (
       <>
-      <Flex gap='small' wrap style={{ marginBottom: 20 }} justify='space-between' >
+      <Flex gap='small' wrap style={{ marginBottom: 20 }} >
         { canRoleDo(user.role, 'CREATE', 'user') ?
+          <>
           <Button type="primary" size="large" onClick={() => {
-          setActionType('Crear')
-          setOpen(true)
+            setActionType('Crear')
+            setOpen(true)
           }}>
             Crear
           </Button>
+          <Button size="large" onClick={() => setOpenBulk(true)}>
+              Crear muchos
+          </Button>
+          </>
         : null }
       </Flex>
         <div className='scroll'>
@@ -79,6 +89,9 @@ function Users() {
         </div>
           { open ?
           <User open={open} setOpen={setOpen} type={actionType} username={username} />
+          : null }
+          { openBulk ?
+            <BulkCreate open={openBulk} setOpen={setOpenBulk} type={'usuarios'} />
           : null }
       </>
   )
