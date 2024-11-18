@@ -16,7 +16,9 @@ export function UserProvider({ children }) {
     
         try {
           const res = await api.post('/auth/login', { username, password });
-          const { user } = res.data;
+          const { user, token } = res.data;
+          localStorage.setItem('token',token);
+          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           setUser(user);
         } catch(err) {
           const error = err.response ? err.response.data.message : err.message; // Use client error if no response
@@ -25,9 +27,10 @@ export function UserProvider({ children }) {
     }
 
     async function logout() {
-
         try {
           await api.get('/auth/logout');
+          localStorage.removeItem('token');
+          api.defaults.headers.common['Authorization'] = '';
           setUser(null);
         } catch(err) {
           const error = err.response ? err.response.data.message : err.message;
@@ -36,7 +39,10 @@ export function UserProvider({ children }) {
     }
 
     async function init() {
+      const token = localStorage.getItem('token');
       try {
+        if (!token) throw new Error('Unauthorized: No user session token')
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         const res = await api.get('/auth');
         const { user } = res.data;
         setUser(user);
