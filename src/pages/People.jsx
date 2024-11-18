@@ -53,7 +53,7 @@ function People() {
   }
 
   if (error) {
-    if (error.message.includes('Unauthorized') || error.message.includes('Forbbiden')) return <Unathorized/>;
+    if (error.message.includes('Unauthorized') || error.message.includes('Forbbiden') || error.message.includes('TokenExpiredError')) return <Unathorized/>;
     return <Error message={error.message}/>;
   }
 

@@ -67,7 +67,7 @@ const HomeLayout = () => {
 
   if (authLoading) return <Loading/>
   if (!user && authError) {
-    if (authError.includes('Unauthorized') || authError.includes('Forbbiden')) return <Unathorized/>;
+    if (authError.includes('Unauthorized') || authError.includes('Forbbiden') || authError.includes('TokenExpiredError')) return <Unathorized/>;
     return <Error message={authError}/>;
   }
   
