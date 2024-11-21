@@ -45,7 +45,6 @@ export default function useUsers() {
 
   const updateUser = async function (data) {
     try {
-      if (!data.password) delete data.password; // Do not update empty password
       await api.put('/users', data);
     } catch(err) {
       const error = err.response ? err.response.data.message : err.message;
@@ -55,7 +54,7 @@ export default function useUsers() {
 
   const deleteUser = async function (username) {
     try {
-      await api.delete(`/users/${username}`); // TODO: Not deleting token since there is no DB for that
+      await api.delete(`/users/${username}`);
     } catch(err) {
       const error = err.response ? err.response.data.message : err.message;
       throw new Error(error);
