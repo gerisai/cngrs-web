@@ -121,7 +121,6 @@ function Users() {
           renderItem={(item, index) => (
             <List.Item>
               <List.Item.Meta
-                avatar={<Avatar src={item.avatar || `https://api.dicebear.com/9.x/initials/svg?seed=${item.name}`} />}
                 title={<a onClick={() => {
                     setActionType('Editar')
                     setUsername(item.username)

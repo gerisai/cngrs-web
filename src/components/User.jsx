@@ -1,4 +1,4 @@
-import { Button, Col, Drawer, Form, Input, Row, Space, Select, Skeleton, Flex, Popconfirm, Switch } from 'antd';
+import { Button, Col, Drawer, Form, Input, Row, Space, Select, Skeleton, Flex, Popconfirm, Switch, Avatar } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { CloseCircleOutlined } from '@ant-design/icons';
 // Project imports
@@ -107,6 +107,12 @@ function User({ open, setOpen, type, username }) {
         size="large"
         disabled={ user ? !canRoleDo(currentUser.role, 'UPDATE', 'user') : false }
       >
+        <Flex justify='center' style={{ marginBottom: 12 }}>
+          <Avatar 
+            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
+            src={user.avatar || `https://api.dicebear.com/9.x/initials/svg?seed=${user.name}`} 
+          />
+        </Flex>
           <Row>
             <Col span={24}>
               <Form.Item
