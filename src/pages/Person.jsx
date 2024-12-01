@@ -58,7 +58,7 @@ function Person() {
 
   var personCard = (
     <Card
-      title={<Title style={{ textAlign: 'center', textWrap: 'wrap' }}>{person.name}</Title>}
+      title={<Title style={{ textAlign: 'center', color: 'white', textWrap: 'wrap' }}>{person.name}</Title>}
     >
       <Title style={{ margin:0 }} level={5}>Zona: {person.zone}</Title>
       <br />
@@ -82,7 +82,7 @@ function Person() {
       </>
       : null }
       { showQr ?
-        <QRCode style={{ margin: 12 }} value={`${import.meta.env.VITE_WEB_URL}/person/${personId}`} errorLevel='H' icon='/CNGRS.svg'/>
+        <QRCode style={{ margin: 12 }} value={`${import.meta.env.VITE_WEB_URL}/person/${personId}`} errorLevel='H' icon='/logo.svg'/>
       : null}
       </Flex>
     </Card>

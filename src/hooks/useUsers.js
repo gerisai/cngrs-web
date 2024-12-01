@@ -32,11 +32,24 @@ export default function useUsers() {
     }
   };
 
-  const readUsers = async function () {
+  const readUsers = async function (query) {
     try {
-      const res = await api.get('/users');
+      const res = await api.get('/users', { 
+        params: query
+      });
       const users = res.data.users;
       return users;
+    } catch(err) {
+      const error = err.response ? err.response.data.message : err.message;
+      throw new Error(error);
+    }
+  };
+
+  const readUsersNames = async function () {
+    try {
+      const res = await api.get('/users/allnames');
+      const usersNames = res.data.usersNames;
+      return usersNames;
     } catch(err) {
       const error = err.response ? err.response.data.message : err.message;
       throw new Error(error);
@@ -75,6 +88,7 @@ export default function useUsers() {
   bulkCreateUsers,
   readUser,
   readUsers,
+  readUsersNames,
   updateUser,
   deleteUser,
   uploadAvatar
