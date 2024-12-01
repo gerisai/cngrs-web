@@ -32,11 +32,24 @@ export default function usePeople() {
     }
   };
 
-  const readPeople = async function () {
+  const readPeople = async function (query) {
     try {
-      const res = await api.get('/people');
+      const res = await api.get('/people', { 
+        params: query
+      });
       const people = res.data.people;
       return people;
+    } catch(err) {
+      const error = err.response ? err.response.data.message : err.message;
+      throw new Error(error);
+    }
+  };
+
+  const readPeopleNames = async function () {
+    try {
+      const res = await api.get('/people/allnames');
+      const peopleNames = res.data.peopleNames;
+      return peopleNames;
     } catch(err) {
       const error = err.response ? err.response.data.message : err.message;
       throw new Error(error);
@@ -66,6 +79,7 @@ export default function usePeople() {
   bulkCreatePeople,
   readPerson,
   readPeople,
+  readPeopleNames,
   updatePerson,
   deletePerson
   }

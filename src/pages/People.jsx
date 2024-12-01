@@ -1,8 +1,9 @@
 import { List, Typography, Button, AutoComplete, Flex, Space, Badge, Skeleton } from 'antd';
 import { useState, createElement } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { EnvironmentOutlined, HomeOutlined, CheckCircleOutlined, QrcodeOutlined } from '@ant-design/icons';
+import InfiniteScroll from 'react-infinite-scroll-component';
 // Project imports
 import { useUser } from '../lib/context/user';
 import usePeople from '../hooks/usePeople';
@@ -11,6 +12,7 @@ import Unathorized from './Unathorized';
 import Person from '../components/Person';
 import BulkCreate from '../components/BulkCreate';
 import canRoleDo from '../util/roleValidation';
+import { pageSize } from '../util/constants';
 
 const { Title } = Typography;
 
@@ -23,7 +25,7 @@ const IconText = ({ icon, text }) => (
 
 function People() {
   const { user } = useUser();
-  const { readPeople } = usePeople();
+  const { readPeople, readPeopleNames } = usePeople();
   const navigate = useNavigate();
 
   // Drawer render state
@@ -33,14 +35,24 @@ function People() {
   const [personId, setPersonId] = useState(null);
 
   // Search state
-  const [options, setOptions] = useState([]);
+  const [search, setSearch] = useState(null); // Search
+  const [searchInput,setSearchInput] = useState(''); // Search input
+  const [options, setOptions] = useState([]); // Autocomplete
 
-  // Filter state
-  const [people, setPeople] = useState(null);
+  const { data: queryPeople , isPending, fetchNextPage, hasNextPage, error } = useInfiniteQuery({
+    queryFn: ({ pageParam = 1 }) => {
+      return readPeople({ name: search, limit: pageSize, page: pageParam })
+    },
+    getNextPageParam: (lastPage, allPages) => {
+        return lastPage.length >= pageSize ? allPages.length + 1 : undefined
+    },
+    queryKey: ['people', { search }],
+    retry: false
+  });
 
-  const { data: queryPeople , isPending, error } = useQuery({
-    queryFn: () => readPeople(),
-    queryKey: ['people'],
+  const { data: peopleNames } = useQuery({
+    queryFn: () => readPeopleNames(),
+    queryKey: ['peopleNames'],
     retry: false
   });
 
@@ -57,25 +69,16 @@ function People() {
     return <Error message={error.message}/>;
   }
 
-  let data = queryPeople ? queryPeople.map((person,i) => ({
-      key: i,
-      personId: person.personId,
-      name: person.name,
-      zone: person.zone,
-      branch: person.branch,
-      accessed: person.accessed
-  })) : null;
-  const personNames = data ? data.map((person) => person.name) : null;
-
   const onSelect = (match) => {
-    setPeople(data.filter((person) => person.name === match));
+    setSearch(match);
+    setOptions([]);
   };
 
-  const handleSearch = (value) => {
-    setPeople(null)
-    const matches = personNames.filter((name) => name.includes(value.toUpperCase()));
-    setPeople(data.filter((person) => person.name.includes(value.toUpperCase()))); // filter in real time
-    setOptions(!value ? [] : matches.map(m => ({ value: m })));
+  const handleAutocomplete = (value) => {
+    if (peopleNames) {
+      const matches = peopleNames.filter(({ name }) => name.includes(value.toUpperCase()));
+      setOptions(!value ? [] : matches.map(p => ({ value: p.name })));
+    }
   };
 
   return (
@@ -95,24 +98,34 @@ function People() {
           </Flex>
         : null }
       <AutoComplete
+        allowClear
+        onClear={() => setSearch(null)}
         popupMatchSelectWidth={252}
         style={{
           width: 300
         }}
         options={options}
+        value={searchInput}
+        onChange={(value) => setSearchInput(value)}
         onSelect={onSelect}
-        onSearch={handleSearch}
+        onSearch={handleAutocomplete}
         size="large"
         placeholder='Buscar...'
       />
       </Flex>
-      <div className='scroll'>
+      <div id="scrollableDiv" className='scroll'>
+      <InfiniteScroll
+        dataLength={queryPeople.pages.flat().length}
+        next={fetchNextPage}
+        hasMore={hasNextPage}
+        scrollableTarget="scrollableDiv"
+      >
       <List
         style={{ marginTop: 20 }}
         locale={{
           emptyText: <Title>Sin asistentes</Title>
         }}
-        dataSource={people || data}
+        dataSource={queryPeople.pages.flat()}
           renderItem={(item, index) => (
             <List.Item
               extra={
@@ -142,6 +155,7 @@ function People() {
             </List.Item>
           )}
         />
+        </InfiniteScroll>
         </div>
         { open ?
         <Person open={open} setOpen={setOpen} type={actionType} personId={personId} />
