@@ -76,7 +76,7 @@ const HomeLayout = () => {
     <Layout className='main-flex'>
       <Layout>
       <Header className='header'>
-          <Button onClick={easterEgg} type='link'><Image alt='cnrgs-logo' preview={false} width={50} src='/CNGRS.svg' /></Button>
+          <Button onClick={easterEgg} type='link'><Image alt='cnrgs-logo' preview={false} width={50} src='/logo-white.svg' /></Button>
           <Row>
             <Col sm={4}>
             <Upload {...avatarProps}>
@@ -84,7 +84,7 @@ const HomeLayout = () => {
             </Upload>
             </Col>
             <Col xs={0} sm={20}>
-            <Title style={{ marginLeft: 10, marginTop: 10 }}>{user.name.split(' ')[0]}</Title>
+            <Title style={{ color: 'white', marginLeft: 10, marginTop: 10 }}>{user.name.split(' ')[0]}</Title>
             </Col>
           </Row>
       </Header>

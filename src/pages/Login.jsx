@@ -1,4 +1,4 @@
-import { Flex, Typography, Input, Button, Form } from 'antd';
+import { Flex, Typography, Input, Button, Form, Image } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
@@ -42,29 +42,41 @@ function Login() {
   return (
     <>
     <Flex className='main-flex' align='center' justify='center'>
-        <Flex className='box' vertical align='center' justify='center'>
-          <Title>Iniciar Sesión</Title>
-          <Form name="login" onFinish={handleLogin} onFinishFailed={handleValidation} size="large">
-            <Form.Item
-              name="username"
-              rules={validationRules.username}
+        <Flex vertical align='center' justify='center'>
+          <Flex align='center' justify='center' gap='middle'>
+            <Image preview={false} src="/logo-white.svg"/>
+            <Title style={{ color: 'white' }}>Congreso 2024</Title>
+          </Flex>
+          <Title style={{ color: 'white' }}>Iniciar Sesión</Title>
+            <Form
+              style={{  }}
+              name="login" 
+              onFinish={handleLogin} 
+              onFinishFailed={handleValidation} 
+              size="large" 
+              layout='vertical'
+              variant='outlined'
             >
-              <Input placeholder='Usuario'/>
-            </Form.Item>
+              <Form.Item
+                name="username"
+                rules={validationRules.username}
+              >
+                <Input placeholder='Usuario'/>
+              </Form.Item>
 
-            <Form.Item
-              name="password"
-              rules={validationRules.password}
-            >
-              <Input.Password placeholder='Contraseña' />
-            </Form.Item>
+              <Form.Item
+                name="password"
+                rules={validationRules.password}
+              >
+                <Input.Password placeholder='Contraseña' />
+              </Form.Item>
 
-            <Form.Item>
-              <Button type="primary" htmlType="submit" loading={isPending}>
-                Enviar
-              </Button>
-            </Form.Item>
-          </Form>
+              <Form.Item>
+                <Button block ghost variant="outlined" htmlType="submit" loading={isPending}>
+                  Enviar
+                </Button>
+              </Form.Item>
+            </Form>
         </Flex>
     </Flex>
     </>

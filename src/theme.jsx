@@ -1,22 +1,17 @@
-import { theme } from 'antd';
-
 const customTheme = {
     components: {
       Card: {
-        headerBg: 'radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%)'
+        headerBg: 'linear-gradient(#00BFDD, #5CC3B5)'
       }
     },
     token: {
-      colorPrimary: '#fc46c7',
-      colorBgBase: "#141414",
+      colorPrimary: '#00BFDD',
+      //colorBgBase: "",
       colorInfo: '#00bed1',
       colorSuccess: '#7fff3f',
       colorWarning: '#ffe355',
       colorError: '#ff595b'
-    },
-    algorithm: [
-      theme.darkAlgorithm
-    ]
+    }
 }
 
 export default customTheme;
