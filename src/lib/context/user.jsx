@@ -13,7 +13,6 @@ export function UserProvider({ children }) {
     const [authError,setAuthError] = useState('');
 
     async function login({ username, password }) {
-    
         try {
           const res = await api.post('/auth/login', { username, password });
           const { user, token } = res.data;

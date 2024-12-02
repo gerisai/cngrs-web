@@ -41,7 +41,7 @@ function Login() {
 
   return (
     <>
-    <Flex className='main-flex' align='center' justify='center'>
+    <Flex className='main-flex-login' align='center' justify='center'>
         <Flex vertical align='center' justify='center'>
           <Image width={80} height={80} preview={false} src="/logo-white.svg"/>
           <Title style={{ color: 'white', textAlign: 'center' }}>Congreso 2024</Title>
