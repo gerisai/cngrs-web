@@ -43,13 +43,10 @@ function Login() {
     <>
     <Flex className='main-flex' align='center' justify='center'>
         <Flex vertical align='center' justify='center'>
-          <Flex align='center' justify='center' gap='middle'>
-            <Image preview={false} src="/logo-white.svg"/>
-            <Title style={{ color: 'white' }}>Congreso 2024</Title>
-          </Flex>
+          <Image width={80} height={80} preview={false} src="/logo-white.svg"/>
+          <Title style={{ color: 'white', textAlign: 'center' }}>Congreso 2024</Title>
           <Title style={{ color: 'white' }}>Iniciar Sesión</Title>
             <Form
-              style={{  }}
               name="login" 
               onFinish={handleLogin} 
               onFinishFailed={handleValidation} 
