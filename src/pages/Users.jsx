@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Avatar, List, Button, Typography, Flex, Skeleton, AutoComplete } from 'antd';
+import { List, Button, Typography, Flex, Skeleton, AutoComplete, Cascader } from 'antd';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
 // Project imports
@@ -11,11 +11,13 @@ import User from '../components/User';
 import BulkCreate from '../components/BulkCreate';
 import canRoleDo from '../util/roleValidation';
 import { LangMappings } from '../util/i8n';
-import { pageSize } from '../util/constants';
+import { pageSize, userFilters, emptyUsersFilter } from '../util/constants';
 
 const { Title } = Typography;
 
 function Users() {
+  const [filter,setFilter] = useState(emptyUsersFilter);
+  const [appliedFilter,setAppliedFilter] = useState([]); // Preserve filter UI across updates
   const { user } = useUser();
   const { readUsers, readUsersNames } = useUsers();
 
@@ -33,12 +35,12 @@ function Users() {
 
   const { data: users , isPending, fetchNextPage, hasNextPage, error } = useInfiniteQuery({
     queryFn: ({ pageParam = 1 }) => {
-      return readUsers({ name: search, limit: pageSize, page: pageParam })
+      return readUsers({ name: search, ...filter, limit: pageSize, page: pageParam })
     },
     getNextPageParam: (lastPage, allPages) => {
         return lastPage.length >= pageSize ? allPages.length + 1 : undefined
     },
-    queryKey: ['people', { search }],
+    queryKey: ['people', { search }, { filter }],
     retry: false
   });
 
@@ -61,6 +63,14 @@ function Users() {
     return <Error message={error.message}/>;
   }
 
+  const onChange = (value) => {
+    if (value.length < 2) return // Parent selection
+    setFilter({
+      [value[0]]: value[1]
+    })
+    setAppliedFilter(value);
+  };
+
   const onSelect = (match) => {
     setSearch(match);
     setOptions([]);
@@ -75,9 +85,9 @@ function Users() {
 
   return (
       <>
-      <Flex gap='small' wrap style={{ marginBottom: 20 }} justify='space-between'>
+      <Flex gap='small' wrap justify='space-between' >
         { canRoleDo(user.role, 'CREATE', 'user') ?
-          <Flex gap='small' wrap style={{ marginBottom: 20 }}>
+        <Flex gap='small' wrap>
           <Button type="primary" size="large" onClick={() => {
             setActionType('Crear')
             setOpen(true)
@@ -87,7 +97,7 @@ function Users() {
           <Button size="large" onClick={() => setOpenBulk(true)}>
               Crear muchos
           </Button>
-          </Flex>
+        </Flex>
         : null }
         <AutoComplete
           allowClear
@@ -103,6 +113,19 @@ function Users() {
           onSearch={handleAutocomplete}
           size="large"
           placeholder='Buscar...'
+        />
+        <Cascader
+          variant='filled'
+          style={{
+            width: '100%'
+          }}
+          value={appliedFilter}
+          options={userFilters}
+          placeholder="Filtrar..."
+          onChange={onChange}
+          changeOnSelect
+          maxTagCount="responsive"
+          defaultValue={[]}
         />
       </Flex>
       <div id="scrollableDiv" className='scroll'>

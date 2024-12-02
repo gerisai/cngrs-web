@@ -1,4 +1,4 @@
-import { List, Typography, Button, AutoComplete, Flex, Space, Badge, Skeleton } from 'antd';
+import { List, Typography, Button, AutoComplete, Flex, Space, Badge, Skeleton, Cascader } from 'antd';
 import { useState, createElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
@@ -12,9 +12,10 @@ import Unathorized from './Unathorized';
 import Person from '../components/Person';
 import BulkCreate from '../components/BulkCreate';
 import canRoleDo from '../util/roleValidation';
-import { pageSize } from '../util/constants';
+import { pageSize, personFilters, emptyPeopleFilter, getStaticCategory, staticCategories } from '../util/constants';
 
 const { Title } = Typography;
+const { SHOW_CHILD } = Cascader;
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -24,8 +25,12 @@ const IconText = ({ icon, text }) => (
 );
 
 function People() {
+  const [filter,setFilter] = useState(emptyPeopleFilter);
+  const [filterOptions,setFilterOptions] = useState(personFilters); // Load categories
+  const [appliedFilter,setAppliedFilter] = useState([]); // Preserve filter UI across updates
+  
   const { user } = useUser();
-  const { readPeople, readPeopleNames } = usePeople();
+  const { readPeople, readPeopleNames, getPeopleCategory } = usePeople();
   const navigate = useNavigate();
 
   // Drawer render state
@@ -41,12 +46,13 @@ function People() {
 
   const { data: queryPeople , isPending, fetchNextPage, hasNextPage, error } = useInfiniteQuery({
     queryFn: ({ pageParam = 1 }) => {
-      return readPeople({ name: search, limit: pageSize, page: pageParam })
+      console.log(filter)
+      return readPeople({ name: search, ...filter, limit: pageSize, page: pageParam })
     },
     getNextPageParam: (lastPage, allPages) => {
         return lastPage.length >= pageSize ? allPages.length + 1 : undefined
     },
-    queryKey: ['people', { search }],
+    queryKey: ['people', { search }, { filter }],
     retry: false
   });
 
@@ -69,6 +75,36 @@ function People() {
     return <Error message={error.message}/>;
   }
 
+  const onChange = (value) => {
+    const newFilter = structuredClone(emptyPeopleFilter);
+    if (value.length !== 0) {
+      if (value[value.length - 1] < 2) return // Parent selection
+      for (const f of value) {
+        const [name,val] = f;
+        newFilter[name] = newFilter[name].concat([val]);
+      }
+      setFilter(newFilter);
+    }
+    else {
+      setFilter(emptyPeopleFilter);
+    }
+    setAppliedFilter(value);
+  };
+
+  const loadCategory = async (selectedOptions) => {
+    let category;
+    const targetOption = selectedOptions[selectedOptions.length - 1];
+    if (staticCategories.includes(targetOption.value)) {
+      category = getStaticCategory(targetOption.value);
+      targetOption.children = category;
+    }
+    else { 
+      category = await getPeopleCategory(targetOption.value);
+      targetOption.children = category.map(c => ({ label: c, value: c }));
+    }
+    setFilterOptions([...filterOptions]);
+  }
+
   const onSelect = (match) => {
     setSearch(match);
     setOptions([]);
@@ -83,9 +119,9 @@ function People() {
 
   return (
       <>
-      <Flex gap='small' wrap style={{ marginBottom: 20 }} justify='space-between' >
+      <Flex gap='small' wrap justify='space-between' >
       { canRoleDo(user.role, 'CREATE', 'person') ?
-          <Flex gap='small' wrap style={{ marginBottom: 20 }}>
+        <Flex gap='small' wrap>
           <Button type="primary" size="large" onClick={() => {
           setActionType('Crear')
           setOpen(true)
@@ -95,23 +131,38 @@ function People() {
           <Button size="large" onClick={() => setOpenBulk(true)}>
             Crear muchos
           </Button>
-          </Flex>
+        </Flex>
         : null }
-      <AutoComplete
-        allowClear
-        onClear={() => setSearch(null)}
-        popupMatchSelectWidth={252}
-        style={{
-          width: 300
-        }}
-        options={options}
-        value={searchInput}
-        onChange={(value) => setSearchInput(value)}
-        onSelect={onSelect}
-        onSearch={handleAutocomplete}
-        size="large"
-        placeholder='Buscar...'
-      />
+        <AutoComplete
+          allowClear
+          onClear={() => setSearch(null)}
+          popupMatchSelectWidth={252}
+          style={{
+            width: 300
+          }}
+          options={options}
+          value={searchInput}
+          onChange={(value) => setSearchInput(value)}
+          onSelect={onSelect}
+          onSearch={handleAutocomplete}
+          size="large"
+          placeholder='Buscar...'
+        />
+        <Cascader
+          variant='filled'
+          showCheckedStrategy={SHOW_CHILD}
+          style={{
+            width: '100%'
+          }}
+          value={appliedFilter}
+          options={filterOptions}
+          placeholder="Filtrar..."
+          onChange={onChange}
+          loadData={loadCategory}
+          maxTagCount="responsive"
+          defaultValue={[]}
+          multiple
+        />
       </Flex>
       <div id="scrollableDiv" className='scroll'>
       <InfiniteScroll
