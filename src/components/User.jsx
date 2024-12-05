@@ -108,9 +108,9 @@ function User({ open, setOpen, type, username }) {
         disabled={ user ? !canRoleDo(currentUser.role, 'UPDATE', 'user') : false }
       >
         <Flex justify='center' style={{ marginBottom: 12 }}>
-          <Avatar 
+          <Avatar
             size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
-            src={user.avatar || `https://api.dicebear.com/9.x/initials/svg?seed=${user.name}`} 
+            src={user.username ? user.avatar || `https://api.dicebear.com/9.x/initials/svg?seed=${user.name}` : '/piratita.png' } 
           />
         </Flex>
           <Row>
@@ -175,19 +175,6 @@ function User({ open, setOpen, type, username }) {
                   <Select.Option value="operator">Operador</Select.Option>
                 </Select>
               </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-            { type === 'Crear' ?
-              <Form.Item
-                name="sendMail"
-                label="¿Enviar email de bienvenida?"
-              >
-                <Switch />
-              </Form.Item>
-            : null
-            }
             </Col>
           </Row>
           <Space>
