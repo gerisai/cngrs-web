@@ -186,7 +186,7 @@ function Person({ open, setOpen, type, personId }) {
             <Col span={24}>
             <Form.Item
                 name="accessed"
-                label="¿Registrado?"
+                label="¿Registrar acceso?"
               >
                 <Switch defaultChecked={person ? person.accessed : false } />
               </Form.Item>

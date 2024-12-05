@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { List, Button, Typography, Flex, Skeleton, AutoComplete, Cascader } from 'antd';
+import { List, Button, Flex, Skeleton, AutoComplete, Cascader } from 'antd';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
 // Project imports
@@ -8,12 +8,11 @@ import useUsers from '../hooks/useUsers';
 import Error from './Error';
 import Unathorized from './Unathorized';
 import User from '../components/User';
+import EmptyList from '../components/EmptyList';
 import BulkCreate from '../components/BulkCreate';
 import canRoleDo from '../util/roleValidation';
 import { LangMappings } from '../util/i8n';
 import { pageSize, userFilters, emptyUsersFilter } from '../util/constants';
-
-const { Title } = Typography;
 
 function Users() {
   const [filter,setFilter] = useState(emptyUsersFilter);
@@ -138,7 +137,7 @@ function Users() {
         <List
           style={{ marginTop: 20 }}
           locale={{
-            emptyText: <Title>Sin usuarios</Title>
+            emptyText: <EmptyList/>
           }}
           dataSource={users.pages.flat()}
           renderItem={(item, index) => (

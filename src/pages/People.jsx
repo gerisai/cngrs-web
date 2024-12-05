@@ -1,4 +1,4 @@
-import { List, Typography, Button, AutoComplete, Flex, Space, Badge, Skeleton, Cascader } from 'antd';
+import { List, Button, AutoComplete, Flex, Space, Badge, Skeleton, Cascader } from 'antd';
 import { useState, createElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
@@ -10,17 +10,17 @@ import usePeople from '../hooks/usePeople';
 import Error from './Error';
 import Unathorized from './Unathorized';
 import Person from '../components/Person';
+import EmptyList from '../components/EmptyList';
 import BulkCreate from '../components/BulkCreate';
 import canRoleDo from '../util/roleValidation';
 import { pageSize, personFilters, emptyPeopleFilter, getStaticCategory, staticCategories } from '../util/constants';
 
-const { Title } = Typography;
 const { SHOW_CHILD } = Cascader;
 
 const IconText = ({ icon, text }) => (
   <Space>
     {createElement(icon)}
-    {text}
+    {text || 'N/A'}
   </Space>
 );
 
@@ -174,7 +174,7 @@ function People() {
       <List
         style={{ marginTop: 20 }}
         locale={{
-          emptyText: <Title>Sin asistentes</Title>
+          emptyText: <EmptyList/>
         }}
         dataSource={queryPeople.pages.flat()}
           renderItem={(item, index) => (
