@@ -1,4 +1,4 @@
-import { Button, Col, Drawer, Form, Input, Row, Space, Skeleton, Flex, Popconfirm, Switch, Select } from 'antd';
+import { Button, Col, Drawer, Form, Input, Row, Space, Skeleton, Flex, Popconfirm, Select } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { CloseCircleOutlined } from '@ant-design/icons';
 // Project imports
@@ -19,7 +19,7 @@ function Person({ open, setOpen, type, personId }) {
     mutationFn: async (values) => {
       try {
         setOpen(false);
-        await createPerson(values);
+        await createPerson({ ...values, accessed: true });
         api.success({ message: 'Éxito', description: 'Asistente creado', placement: 'top', showProgress: true });
       } catch(err) {
         api.error({ message: 'Error', placement: 'top', description: err.message });
@@ -170,7 +170,6 @@ function Person({ open, setOpen, type, personId }) {
             </Col>
           </Row>
           <Row>
-          <Row>
             <Col span={24}>
             <Form.Item
                 name="illness"
@@ -179,16 +178,6 @@ function Person({ open, setOpen, type, personId }) {
                 initialValue={person ? person.tutor : ''}
               >
                 <Input.TextArea rows={2} placeholder="" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row></Row>
-            <Col span={24}>
-            <Form.Item
-                name="accessed"
-                label="¿Registrar acceso?"
-              >
-                <Switch defaultChecked={person ? person.accessed : false } />
               </Form.Item>
             </Col>
           </Row>
@@ -228,10 +217,10 @@ function Person({ open, setOpen, type, personId }) {
           <Row>
             <Col span={24}>
             <Form.Item
-                name="room"
-                label="Cuarto"
-                initialValue={person ? person.room : ''}
-              >
+              name="room"
+              label="Cuarto"
+              initialValue={person ? person.room : ''}
+            >
                 <Input placeholder="Cuarto" />
               </Form.Item>
             </Col>
