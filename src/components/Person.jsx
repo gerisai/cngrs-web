@@ -217,6 +217,17 @@ function Person({ open, setOpen, type, personId }) {
           <Row>
             <Col span={24}>
             <Form.Item
+                name="city"
+                label="Ciudad"
+                initialValue={person ? person.city : ''}
+              >
+                <Input placeholder="Ciudad" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+            <Form.Item
                 name="room"
                 label="Cuarto"
                 initialValue={person ? person.room : ''}
