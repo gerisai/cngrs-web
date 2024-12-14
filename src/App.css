@@ -13,6 +13,10 @@
   text-align: center;
 }
 
+.main-text {
+  color: white;
+}
+
 .box {
   background: rgb(63,94,251);
   background: linear-gradient(#00BFDD, #5CC3B5);

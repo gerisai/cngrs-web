@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AppstoreOutlined, UserOutlined, TableOutlined, TeamOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Button, Layout, FloatButton, Image, Typography, Avatar, Upload, Spin, Row, Col, message } from 'antd';
+import { Flex, Button, Layout, FloatButton, Image, Typography, Avatar, Upload, Spin, Row, Col, message } from 'antd';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 // Project imports
@@ -77,16 +77,16 @@ const HomeLayout = () => {
       <Layout>
       <Header className='header'>
           <Button onClick={easterEgg} type='link'><Image alt='cnrgs-logo' preview={false} width={50} src='/logo-white.svg' /></Button>
-          <Row>
-            <Col sm={4}>
-            <Upload {...avatarProps}>
-              { avatarLoading ? <Spin size="large" /> : <Avatar shape="square" src={user.avatar} size="large" icon={<UserOutlined />} /> }
-            </Upload>
-            </Col>
-            <Col xs={0} sm={20}>
-            <Title style={{ color: 'white', marginLeft: 10, marginTop: 10 }}>{user.name.split(' ')[0]}</Title>
-            </Col>
-          </Row>
+          <Flex gap='middle' align='center' style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
+            <Flex>
+              <Upload {...avatarProps}>
+                { avatarLoading ? <Spin size="large" /> : <Avatar shape="square" src={user.avatar} size="large" icon={<UserOutlined />} /> }
+              </Upload>
+            </Flex>
+            <Flex className='main-text'>
+              <h1>{user.name.split(' ')[0]}</h1>
+            </Flex>
+          </Flex>
       </Header>
         <Content style={{ margin: '24px 24px'}}>
           <div className='content'>

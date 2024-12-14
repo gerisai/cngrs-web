@@ -46,7 +46,6 @@ function People() {
 
   const { data: queryPeople , isPending, fetchNextPage, hasNextPage, error } = useInfiniteQuery({
     queryFn: ({ pageParam = 1 }) => {
-      console.log(filter)
       return readPeople({ name: search, ...filter, limit: pageSize, page: pageParam })
     },
     getNextPageParam: (lastPage, allPages) => {

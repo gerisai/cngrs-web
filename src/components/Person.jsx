@@ -174,8 +174,8 @@ function Person({ open, setOpen, type, personId }) {
             <Form.Item
                 name="illness"
                 label="Enfermedad/Medicamentos"
-                rules={validationRules.tutor}
-                initialValue={person ? person.tutor : ''}
+                rules={validationRules.illness}
+                initialValue={person ? person.illness : ''}
               >
                 <Input.TextArea rows={2} placeholder="" />
               </Form.Item>
