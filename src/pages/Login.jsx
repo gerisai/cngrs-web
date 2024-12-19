@@ -28,7 +28,7 @@ function Login() {
     mutationFn: async (values) => {
       try {
         await login(values);
-        navigate('/people');
+        navigate('/');
       } catch(err) {
         api.error({ message: 'Error', description: err.message, placement: 'top', showProgress: true });
       }

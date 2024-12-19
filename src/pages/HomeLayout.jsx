@@ -32,6 +32,7 @@ const HomeLayout = () => {
       message: `CNGRS Web ©${new Date().getFullYear()}`, 
       description:  'Made by GIDP with 💜',
       placement: 'top' })
+    navigate('/');
   }
 
   const avatarProps = {

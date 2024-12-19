@@ -74,6 +74,19 @@ export default function usePeople() {
     }
   };
 
+  const getPeopleStats = async function (query) {
+    try {
+      const res = await api.get("/people/stats", { 
+        params: query
+      });
+      const { count } = res.data;
+      return count;
+    } catch(err) {
+      const error = err.response ? err.response.data.message : err.message;
+      throw new Error(error);
+    }
+  };
+
   const getPeopleCategory = async function (name) {
     try {
       const res = await api.get("/people/category", { 
@@ -97,6 +110,7 @@ export default function usePeople() {
   readPeopleNames,
   updatePerson,
   deletePerson,
+  getPeopleStats,
   getPeopleCategory
   }
 }

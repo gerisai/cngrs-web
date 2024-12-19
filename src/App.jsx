@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import HomeLayout from './pages/HomeLayout';
 import Person from './pages/Person';
 import People from './pages/People';
+import Stats from './pages/Stats.jsx';
 import Users from './pages/Users';
 import NotFound from './pages/NotFound';
 
@@ -24,7 +25,7 @@ function App() {
     <NotificationProvider>
       <Routes>
         <Route path='/' element={ <HomeLayout/> }>
-          <Route path='/' element={ <People/> } />
+          <Route path='/' element={ <Stats/> } />
           <Route path='/people' element={ <People/> } />
           <Route path='/person/:personId' element={ <Person/> } />
           <Route path='/users' element={ <Users/> } />
