@@ -84,3 +84,21 @@ export const emptyPeopleFilter = {
   city: [],
   accessed: []
 };
+
+export const csvFields = {
+  usuarios: ['name','email'],
+  asistentes: ['name', 'email', 'gender', 'cellphone', 'illness', 'tutor', 'zone', 'branch', 'room', 'age', 'city', 'activity']
+}
+
+export const activities = [
+  '⚽️ Fútbol',
+  '🏀 Basquetbol',
+  '🏐 Voleibol',
+  '🏉 Tochito',
+  '🎾 Tenis',
+  '🏊🏼 Natación',
+  '♟️ Ajedrez',
+  '🃏 Uno (Juego de mesa)',
+  '🎲 Juegos de mesa variados',
+  '🎸 Música libre',
+]

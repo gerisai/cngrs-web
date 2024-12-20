@@ -45,6 +45,12 @@ const validationRules = {
       message: 'Solo puede contener números'
     }
   ],
+  age: [
+    {
+      pattern: /^[0-9]+$/,
+      message: 'Solo puede contener números'
+    }
+  ],
   role: [
     {
       required: true,

@@ -7,6 +7,7 @@ import { useUser } from '../lib/context/user';
 import { useNotification } from '../lib/context/notification';
 import usePeople from '../hooks/usePeople';
 import canRoleDo from '../util/roleValidation';
+import { activities } from '../util/constants';
 
 function Person({ open, setOpen, type, personId }) {
   const { user: currentUser } = useUser();
@@ -217,10 +218,37 @@ function Person({ open, setOpen, type, personId }) {
           <Row>
             <Col span={24}>
             <Form.Item
-              name="room"
-              label="Cuarto"
-              initialValue={person ? person.room : ''}
-            >
+                name="age"
+                label="Edad"
+                rules={validationRules.age}
+                initialValue={person ? person.age : ''}
+              >
+                <Input placeholder="Edad" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                name="activity"
+                label="Actividad"
+                initialValue={person ? person.activity : ''}
+              >
+                <Select placeholder="Selecciona género">
+                  { activities.map((activity, index) => ( 
+                    <Select.Option key={index} value={activity}>{activity}</Select.Option> 
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                name="room"
+                label="Cuarto"
+                initialValue={person ? person.room : ''}
+              >
                 <Input placeholder="Cuarto" />
               </Form.Item>
             </Col>

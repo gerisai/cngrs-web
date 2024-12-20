@@ -7,7 +7,6 @@ import { useUser } from '../lib/context/user';
 import { useNotification } from '../lib/context/notification';
 import usePeople from '../hooks/usePeople';
 import canRoleDo from '../util/roleValidation';
-import Loading from './Loading';
 import Error from './Error';
 import Unathorized from './Unathorized';
 
@@ -60,9 +59,13 @@ function Person() {
     <Card
       title={<Title style={{ textAlign: 'center', color: 'white', textWrap: 'wrap' }}>{person.name}</Title>}
     >
-      <Title style={{ margin:0 }} level={5}>Zona: {person.zone}</Title>
+      <Title style={{ margin:0 }} level={5}>Zona: {person.zone || 'Sin datos'}</Title>
       <br />
-      <Title style={{ margin:0 }} level={5}>Localidad: {person.branch}</Title>
+      <Title style={{ margin:0 }} level={5}>Localidad: {person.branch || 'Sin datos'}</Title>
+      <br />
+      <Title style={{ margin:0 }} level={5}>Actividad: {person.activity || 'Sin datos'}</Title>
+      <br />
+      <Title style={{ margin:0 }} level={5}>Ciudad: {person.city}</Title>
       <br />
       <Title style={{ margin:0 }} level={5}>Cuarto: {person.room}</Title>
       <Flex gap={10} style={{ margin: 12 }} vertical justify='center' align='center'>

@@ -4,14 +4,9 @@ import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import { useNotification } from '../lib/context/notification';
 import useUsers from '../hooks/useUsers';
 import usePeople from '../hooks/usePeople';
+import { csvFields } from '../util/constants';
 
 const { Text } = Typography;
-
-const csvFields = {
-    usuarios: ['name','email'],
-    asistentes: ['name', 'email', 'gender', 'cellphone', 'zone', 'branch', 'room', 'tutor', 'illness']
-}
-
 
 function BulkCreate({ open, setOpen, type }) {
   const api = useNotification();
