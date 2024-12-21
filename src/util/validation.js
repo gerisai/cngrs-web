@@ -45,6 +45,24 @@ const validationRules = {
       message: 'Solo puede contener números'
     }
   ],
+  gender: [
+    {
+      required: true,
+      message: 'Selecciona un género',
+    }
+  ],
+  city: [
+    {
+      required: true,
+      message: 'Selecciona una ciudad',
+    }
+  ],
+  room: [
+    {
+      required: true,
+      message: 'Selecciona un cuarto',
+    }
+  ],
   age: [
     {
       pattern: /^[0-9]+$/,

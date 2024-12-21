@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button, Col, Drawer, Form, Input, Row, Space, Skeleton, Flex, Popconfirm, Select } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { CloseCircleOutlined } from '@ant-design/icons';
@@ -11,8 +12,10 @@ import { activities } from '../util/constants';
 
 function Person({ open, setOpen, type, personId }) {
   const { user: currentUser } = useUser();
-  const { createPerson, readPerson, updatePerson, deletePerson } = usePeople();
+  const { createPerson, readPerson, updatePerson, deletePerson, getPeopleCategory } = usePeople();
   const api = useNotification();
+  const [cities, setCities] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
   const queryClient = useQueryClient();
 
@@ -74,6 +77,12 @@ function Person({ open, setOpen, type, personId }) {
     }
   });
 
+    const loadCategory = async (name, setFields, fields) => {
+      if (fields.length !== 0) return; // Prevents multiple loads
+      const category = await getPeopleCategory(name);
+      setFields(category.map(c => ({ label: c, value: c })));
+    }
+
   const handleValidation = () => {
     api.error({ message: 'Error', description: 'Revisa los campos', placement: 'top', showProgress: true });
   }
@@ -127,10 +136,12 @@ function Person({ open, setOpen, type, personId }) {
                 rules={validationRules.gender}
                 initialValue={person ? person.gender : ''}
               >
-                <Select placeholder="Selecciona género">
-                  <Select.Option value="male">Hombre</Select.Option>
-                  <Select.Option value="female">Mujer</Select.Option>
-                </Select>
+                <Select 
+                  placeholder="Selecciona género"
+                  options={[
+                    {label: 'Hombre', value: 'male'},
+                    {label: 'Mujer', value: 'female'}
+                ]}/>
               </Form.Item>
             </Col>
           </Row>
@@ -209,9 +220,13 @@ function Person({ open, setOpen, type, personId }) {
             <Form.Item
                 name="city"
                 label="Ciudad"
+                rules={validationRules.city}
                 initialValue={person ? person.city : ''}
               >
-                <Input placeholder="Ciudad" />
+                <Select 
+                  placeholder="Selecciona ciudad"
+                  onFocus={async () => await loadCategory('city', setCities, cities)} options={cities}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -234,11 +249,10 @@ function Person({ open, setOpen, type, personId }) {
                 label="Actividad"
                 initialValue={person ? person.activity : ''}
               >
-                <Select placeholder="Selecciona género">
-                  { activities.map((activity, index) => ( 
-                    <Select.Option key={index} value={activity}>{activity}</Select.Option> 
-                  ))}
-                </Select>
+                <Select 
+                  placeholder="Selecciona actividad"
+                  options={activities.map((activity, index) => ({ label: activity, value: activity }))}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -247,9 +261,13 @@ function Person({ open, setOpen, type, personId }) {
               <Form.Item
                 name="room"
                 label="Cuarto"
+                rules={validationRules.room}
                 initialValue={person ? person.room : ''}
               >
-                <Input placeholder="Cuarto" />
+                <Select 
+                  placeholder="Selecciona cuarto"
+                  onFocus={async () => await loadCategory('room', setRooms, rooms)} options={rooms}
+                />
               </Form.Item>
             </Col>
           </Row>
