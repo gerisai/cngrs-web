@@ -1,12 +1,15 @@
-import { UnorderedListOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { Card, Col, Row, Statistic, Flex, Skeleton } from 'antd';
+import { UnorderedListOutlined, CheckCircleOutlined, CloseCircleOutlined, ManOutlined, WomanOutlined } from '@ant-design/icons';
+import { useState } from 'react';
+import { Modal, Button, Card, Col, Row, Statistic, Flex, Skeleton, Badge } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { Pie } from '@ant-design/charts';
 // Project imports
 import usePeople from '../hooks/usePeople';
+import { colors } from '../util/constants';
 
 function Stats() {
-  const { getPeopleStats } = usePeople();
+  const [pieOpen, setPieOpen] = useState(false);
+  const { getPeopleStats, getCityStats } = usePeople();
 
   const { data: accessed , isPending: accessLoading , error: accessError } = useQuery({
     queryFn: () => getPeopleStats({ accessed: 1 }),
@@ -20,7 +23,13 @@ function Stats() {
     retry: false
   });
 
-  if (accessLoading || totalPending) {
+  const { data: stats, isPending: statsPending, error: statsError } = useQuery({
+    queryFn: () => getCityStats(),
+    queryKey: ['city'],
+    retry: false
+  });
+
+  if (accessLoading || totalPending || statsPending) {
     return (
       <Flex align='center' justify='center'>
         <Skeleton active />
@@ -28,17 +37,20 @@ function Stats() {
     );
   }
 
-  if (accessError || totalError) {
-    const message = accessError.message || totalError.message;
+  if (accessError || totalError || statsError) {
+    const message = accessError.message || totalError.message || statsError.message;
     if (message.includes('Unauthorized') || error.message.includes('Forbbiden') || error.message.includes('TokenExpiredError')) return <Unathorized/>;
     return <Error message={message}/>;
   }
 
   return (
     <>
-    <Row gutter={[16,16]}>
-      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
-        <Card bordered={false}>
+    <Button type="primary" onClick={() => setPieOpen(true)} style={{ marginBottom: 10 }}>
+        Mostrar gráfico
+    </Button>
+    <Row gutter={[16, 16]}>
+      <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8}>
+        <Card style={{ marginBottom: 10}} bordered={false}>
           <Statistic
             title="Confirmados"
             value={total}
@@ -46,8 +58,8 @@ function Stats() {
           />
         </Card>
       </Col>
-      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
-        <Card bordered={false}>
+      <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8}>
+        <Card style={{ marginBottom: 10}} bordered={false}>
           <Statistic
             title="Registrados"
             valueStyle={{ color: '#52c41a' }}
@@ -56,8 +68,8 @@ function Stats() {
           />
         </Card>
       </Col>
-      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
-        <Card bordered={false}>
+      <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8}>
+        <Card style={{ marginBottom: 10}} bordered={false}>
           <Statistic
             title="Por registrar"
             valueStyle={{ color: '#cf1322' }}
@@ -66,45 +78,62 @@ function Stats() {
           />
         </Card>
       </Col>
-    </Row>
-    <Row>
-      <Col xs={0} sm={24} md={24} lg={24} xl={24} xxl={24}>
+      <Modal title="Registro" open={pieOpen} footer={null} onCancel={() => setPieOpen(false)}>
         <Pie
-          angleField='value'
-          colorField= 'type'
-          style={{
-            padding: 0,
-            margin: 0
-          }}
-          scale={{
-            color: {
-              range: ['#00BFDD', '#EDEDED']
-            }
-          }}
-          innerRadius={0.6}
-          data={[
-            { type: 'Registrados', value: accessed},
-            { type: 'Total', value: total}
-          ]}
-          label={false}
-          legend={false}
-          tooltip={false}
-          annotations={[
-            {
-              type: 'text',
-              tooltip: false,
-              style: {
-                text: `${Math.trunc((accessed / total) * 100)}%`,
-                x: '50%',
-                y: '50%',
-                textAlign: 'center',
-                fontSize: 40,
-                fontStyle: 'bold',
+            angleField='value'
+            colorField= 'type'
+            style={{
+              padding: 0,
+              margin: 0
+            }}
+            scale={{
+              color: {
+                range: ['#00BFDD', '#EDEDED']
+              }
+            }}
+            innerRadius={0.6}
+            data={[
+              { type: 'Registrados', value: accessed},
+              { type: 'Total', value: total}
+            ]}
+            label={false}
+            legend={false}
+            tooltip={false}
+            annotations={[
+              {
+                type: 'text',
+                tooltip: false,
+                style: {
+                  text: `${Math.trunc((accessed / total) * 100)}%`,
+                  x: '50%',
+                  y: '50%',
+                  textAlign: 'center',
+                  fontSize: 40,
+                  fontStyle: 'bold',
+                },
               },
-            },
-          ]}
+            ]}
         />
-      </Col>
+      </Modal>
+    </Row>
+    <Row gutter={[16, 16]}>
+        { stats.map((stat, index) => (
+        <Col key={index} xs={24}sm={12} md={12} lg={8} xl={6} xxl={6}>
+          <Badge.Ribbon  text={stat.count.male + stat.count.female} color={colors[index]}>
+            <Card>
+              <Flex gap='middle' align='center'>
+                {stat.city}
+                <Flex gap={4}>
+                  <ManOutlined style={{ color: '#597ef7' }}/> {stat.count.male}
+                </Flex>
+                <Flex gap={4}>
+                  <WomanOutlined style={{ color: '#ff85c0' }} /> {stat.count.female}
+                </Flex>
+              </Flex>
+            </Card>
+          </Badge.Ribbon>
+        </Col>
+        ))}
     </Row>
     </>
   )

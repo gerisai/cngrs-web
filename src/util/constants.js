@@ -17,7 +17,7 @@ export const userFilters = [
   }
 ]
 
-export const staticCategories = ['room', 'accessed']
+export const staticCategories = ['accessed'];
 
 export function getStaticCategory (name) {
   const staticCategories = {
@@ -30,17 +30,7 @@ export function getStaticCategory (name) {
         label: 'No',
         value: false
       },
-    ],
-    room: [
-      {
-        label: 'Junior 203',
-        value: 'Junior 203'
-      },
-      {
-        label: 'Presidencial 309',
-        value: 'Presidencial 309'
-      },
-    ],
+    ]
   }
   return staticCategories[name];
 };
@@ -101,4 +91,23 @@ export const activities = [
   '🃏 Uno (Juego de mesa)',
   '🎲 Juegos de mesa variados',
   '🎸 Música libre',
+]
+
+export const colors = [
+  'red',
+  'magenta',
+  'volcano',
+  'orange',
+  'gold',
+  'lime',
+  'green',
+  'cyan',
+  'blue',
+  'geekblue',
+  'purple',
+  'pink',
+  'grey',
+  'black',
+  'brown',
+  'yellow'
 ]
