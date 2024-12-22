@@ -94,7 +94,7 @@ function Stats() {
             innerRadius={0.6}
             data={[
               { type: 'Registrados', value: accessed},
-              { type: 'Total', value: total}
+              { type: 'Por Registrar', value: total - accessed}
             ]}
             label={false}
             legend={false}
