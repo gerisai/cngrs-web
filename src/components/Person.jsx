@@ -264,10 +264,11 @@ function Person({ open, setOpen, type, personId }) {
                 rules={validationRules.room}
                 initialValue={person ? person.room : ''}
               >
-                <Select 
+                <Input placeholder="Cuarto" />
+                {/* <Select 
                   placeholder="Selecciona cuarto"
                   onFocus={async () => await loadCategory('room', setRooms, rooms)} options={rooms}
-                />
+                /> */}
               </Form.Item>
             </Col>
           </Row>
